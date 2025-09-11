@@ -98,7 +98,7 @@ export default function Resources() {
         <TabsContent value="videos" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.videos.map((video) => (
-              <Card key={video.id} className="overflow-hidden group hover:shadow-lg transition-all">
+              <Card key={video._id} className="overflow-hidden group hover:shadow-lg transition-all">
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-4xl">
                   {video.thumbnail}
                 </div>
