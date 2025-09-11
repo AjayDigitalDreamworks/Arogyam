@@ -15,6 +15,7 @@ import Sleep from "./pages/Sleep";
 import Exercise from "./pages/Exercise";
 import Crisis from "./pages/Crisis";
 import Feedback from "./pages/Feedback";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/exercise" element={<Exercise />} />
             <Route path="/crisis" element={<Crisis />} />
             <Route path="/feedback" element={<Feedback />} />
+           
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

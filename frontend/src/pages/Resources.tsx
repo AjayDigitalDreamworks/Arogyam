@@ -5,15 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Play, 
-  BookOpen, 
-  Headphones, 
-  Download, 
-  Clock, 
-  Star, 
-  Search
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Play,
+  BookOpen,
+  Headphones,
+  Download,
+  Clock,
+  Star,
+  Search,
+  X
 } from "lucide-react";
+
+const cloudinaryBase = "https://res.cloudinary.com/<cloud_name>/video/upload/";
 
 export default function Resources() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,19 +35,22 @@ export default function Resources() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchResources = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/hub/'); // Replace with actual API URL
-        const data = response.data;
+        // Use correct frontend port for CORS (change if needed)
+        const response = await axios.get('http://localhost:3000/hub/videos', { withCredentials: true });
+        const videos = response.data;
+        console.log(videos);
 
-        // Safe fallback in case any key is missing
         setResources({
-          videos: data.videos || [],
-          guides: data.guides || [],
-          exercises: data.exercises || []
+          videos: videos || [],
+          guides: [],
+          exercises: []
         });
       } catch (err) {
         console.error('Error fetching resources:', err);
@@ -96,9 +108,13 @@ export default function Resources() {
         <TabsContent value="videos" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.videos.map((video) => (
-              <Card key={video.id} className="overflow-hidden group hover:shadow-lg transition-all">
+              <Card key={video._id} className="overflow-hidden group hover:shadow-lg transition-all">
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-4xl">
-                  {video.thumbnail}
+                  {video.thumbnailUrl ? (
+                    <img src={video.thumbnailUrl} alt={video.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <Play className="w-12 h-12 text-primary" />
+                  )}
                 </div>
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
@@ -125,7 +141,10 @@ export default function Resources() {
                       </Badge>
                     ))}
                   </div>
-                  <Button className="w-full">
+                  <Button className="w-full" onClick={() => {
+                    setSelectedVideo(video);
+                    setIsModalOpen(true);
+                  }}>
                     <Play className="w-4 h-4 mr-2" />
                     Watch Video
                   </Button>
@@ -202,6 +221,53 @@ export default function Resources() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Video Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedVideo?.title}</DialogTitle>
+          </DialogHeader>
+          {selectedVideo && (
+            <div className="space-y-4">
+              <video
+                controls
+                className="w-full rounded-lg"
+                poster={selectedVideo?.thumbnailUrl}
+                preload="metadata"
+                playsInline
+              >
+                <source
+                  src={cloudinaryBase + selectedVideo.videoUrl}
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  {selectedVideo.duration}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  {selectedVideo.rating}
+                </div>
+                <Badge variant="secondary">{selectedVideo.category}</Badge>
+              </div>
+              <p className="text-sm">{selectedVideo.description}</p>
+              {selectedVideo.tags && (
+                <div className="flex flex-wrap gap-1">
+                  {selectedVideo.tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-xs">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

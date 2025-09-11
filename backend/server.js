@@ -34,8 +34,8 @@ const sessionOption = {
 
 // Updated CORS configuration for credentials
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173", // Vite default port
-  credentials: true, // Allow cookies to be sent
+  origin: "http://localhost:8080", // <-- Change this to match your frontend port
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

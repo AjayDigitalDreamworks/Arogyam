@@ -67,6 +67,16 @@ router.get('/', async (req, res) => {
   res.render('hub', { videos });
 });
 
+// New API endpoint to return videos as JSON
+router.get('/videos', async (req, res) => {
+  try {
+    const videos = await Video.find();
+    res.json(videos);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching videos', error: error.message });
+  }
+});
+
 // Watch video
 router.get('/watch/:id', async (req, res) => {
   const video = await Video.findById(req.params.id);
