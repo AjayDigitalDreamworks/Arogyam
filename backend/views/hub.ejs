@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video Library</title>
+  <!-- <link rel="stylesheet" href="/styles.css" /> -->
+</head>
+<body>
+  <h1>All Videos</h1>
+  <a href="/hub/upload">Upload New Video</a>
+  <div class="video-grid">
+    <% videos.forEach(video => { %>
+      <div class="card">
+        <div class="icon">🎬</div>
+        <p><strong><%= video.title %></strong></p>
+        <img src="<%= video.thumbnailUrl %>" alt="">
+        <p><%= video.category %> | <%= video.duration %> | ⭐ <%= video.rating %></p>
+        <p><%= video.description %></p>
+        <a href="/hub/watch/<%= video._id %>">▶ Watch Video</a>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>

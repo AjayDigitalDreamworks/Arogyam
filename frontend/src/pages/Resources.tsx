@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,137 +12,47 @@ import {
   Download, 
   Clock, 
   Star, 
-  Search,
-  Heart,
-  Brain,
-  Moon,
-  Dumbbell,
-  Users
+  Search
 } from "lucide-react";
-
-const resources = {
-  videos: [
-    {
-      id: '1',
-      title: '5-Minute Meditation for Students',
-      description: 'Quick guided meditation perfect for busy student schedules',
-      duration: '5 min',
-      rating: 4.8,
-      category: 'Meditation',
-      thumbnail: '🧘‍♀️',
-      tags: ['stress relief', 'meditation', 'quick']
-    },
-    {
-      id: '2',
-      title: 'Managing Exam Anxiety',
-      description: 'Evidence-based techniques to reduce test anxiety and improve performance',
-      duration: '12 min',
-      rating: 4.9,
-      category: 'Academic',
-      thumbnail: '📚',
-      tags: ['anxiety', 'exams', 'study tips']
-    },
-    {
-      id: '3',
-      title: 'Sleep Hygiene for Better Rest',
-      description: 'Learn how to improve your sleep quality for better mental health',
-      duration: '8 min',
-      rating: 4.7,
-      category: 'Sleep',
-      thumbnail: '😴',
-      tags: ['sleep', 'wellness', 'habits']
-    },
-    {
-      id: '4',
-      title: 'Building Healthy Relationships',
-      description: 'Communication skills for better friendships and romantic relationships',
-      duration: '15 min',
-      rating: 4.6,
-      category: 'Relationships',
-      thumbnail: '💕',
-      tags: ['relationships', 'communication', 'social']
-    }
-  ],
-  guides: [
-    {
-      id: '1',
-      title: 'Complete Guide to Managing College Stress',
-      description: 'Comprehensive strategies for handling academic and social pressures',
-      readTime: '15 min read',
-      category: 'Stress Management',
-      icon: '📖',
-      tags: ['stress', 'college life', 'comprehensive']
-    },
-    {
-      id: '2',
-      title: 'Mindfulness for Beginners',
-      description: 'Step-by-step introduction to mindfulness practices',
-      readTime: '10 min read',
-      category: 'Mindfulness',
-      icon: '🧠',
-      tags: ['mindfulness', 'beginner', 'practice']
-    },
-    {
-      id: '3',
-      title: 'Recognizing Depression Signs',
-      description: 'Understanding symptoms and when to seek professional help',
-      readTime: '8 min read',
-      category: 'Mental Health',
-      icon: '🏥',
-      tags: ['depression', 'awareness', 'help']
-    }
-  ],
-  exercises: [
-    {
-      id: '1',
-      title: '4-7-8 Breathing Exercise',
-      description: 'Powerful breathing technique for instant calm',
-      duration: '3 min',
-      difficulty: 'Beginner',
-      icon: '🫁',
-      category: 'Breathing'
-    },
-    {
-      id: '2',
-      title: 'Progressive Muscle Relaxation',
-      description: 'Systematic tension and relaxation of muscle groups',
-      duration: '10 min',
-      difficulty: 'Intermediate',
-      icon: '💪',
-      category: 'Relaxation'
-    },
-    {
-      id: '3',
-      title: 'Gratitude Journaling',
-      description: 'Daily practice to shift focus to positive aspects of life',
-      duration: '5 min',
-      difficulty: 'Beginner',
-      icon: '📝',
-      category: 'Mindfulness'
-    },
-    {
-      id: '4',
-      title: 'Body Scan Meditation',
-      description: 'Mindful awareness of physical sensations and tension',
-      duration: '15 min',
-      difficulty: 'Intermediate',
-      icon: '🧘',
-      category: 'Meditation'
-    }
-  ]
-};
-
-const categories = [
-  { name: 'All', icon: Heart, count: 11 },
-  { name: 'Stress Relief', icon: Brain, count: 4 },
-  { name: 'Sleep', icon: Moon, count: 2 },
-  { name: 'Exercise', icon: Dumbbell, count: 3 },
-  { name: 'Social', icon: Users, count: 2 }
-];
 
 export default function Resources() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [resources, setResources] = useState({
+    videos: [],
+    guides: [],
+    exercises: []
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('/hub/'); // Replace with actual API URL
+        const data = response.data;
+
+        // Safe fallback in case any key is missing
+        setResources({
+          videos: data.videos || [],
+          guides: data.guides || [],
+          exercises: data.exercises || []
+        });
+      } catch (err) {
+        console.error('Error fetching resources:', err);
+        setError("Failed to load resources");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResources();
+  }, []);
+
+  if (loading) return <div className="p-8 text-center text-gray-500">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
   return (
     <div className="container mx-auto px-6 py-8 max-w-7xl">
@@ -152,7 +63,7 @@ export default function Resources() {
         </p>
       </div>
 
-      {/* Search and Filters */}
+      {/* Search */}
       <div className="mb-8 space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -162,24 +73,6 @@ export default function Resources() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
           />
-        </div>
-        
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <Button
-              key={category.name}
-              variant={selectedCategory === category.name ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(category.name)}
-              className="flex items-center gap-2"
-            >
-              <category.icon className="w-4 h-4" />
-              {category.name}
-              <Badge variant="secondary" className="ml-1">
-                {category.count}
-              </Badge>
-            </Button>
-          ))}
         </div>
       </div>
 
@@ -199,10 +92,11 @@ export default function Resources() {
           </TabsTrigger>
         </TabsList>
 
+        {/* VIDEOS */}
         <TabsContent value="videos" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.videos.map((video) => (
-              <Card key={video.id} className="wellness-card overflow-hidden group hover:shadow-lg transition-all">
+              <Card key={video.id} className="overflow-hidden group hover:shadow-lg transition-all">
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-4xl">
                   {video.thumbnail}
                 </div>
@@ -225,7 +119,7 @@ export default function Resources() {
                     {video.description}
                   </p>
                   <div className="flex flex-wrap gap-1 mb-3">
-                    {video.tags.map((tag) => (
+                    {video.tags?.map((tag) => (
                       <Badge key={tag} variant="outline" className="text-xs">
                         {tag}
                       </Badge>
@@ -241,10 +135,11 @@ export default function Resources() {
           </div>
         </TabsContent>
 
+        {/* GUIDES */}
         <TabsContent value="guides" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.guides.map((guide) => (
-              <Card key={guide.id} className="wellness-card p-6 hover:shadow-lg transition-all">
+              <Card key={guide.id} className="p-6 hover:shadow-lg transition-all">
                 <div className="text-3xl mb-4">{guide.icon}</div>
                 <Badge variant="secondary" className="mb-3">
                   {guide.category}
@@ -258,7 +153,7 @@ export default function Resources() {
                   {guide.readTime}
                 </div>
                 <div className="flex flex-wrap gap-1 mb-4">
-                  {guide.tags.map((tag) => (
+                  {guide.tags?.map((tag) => (
                     <Badge key={tag} variant="outline" className="text-xs">
                       {tag}
                     </Badge>
@@ -278,15 +173,14 @@ export default function Resources() {
           </div>
         </TabsContent>
 
+        {/* EXERCISES */}
         <TabsContent value="exercises" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.exercises.map((exercise) => (
-              <Card key={exercise.id} className="wellness-card p-6 hover:shadow-lg transition-all">
+              <Card key={exercise.id} className="p-6 hover:shadow-lg transition-all">
                 <div className="text-3xl mb-4">{exercise.icon}</div>
                 <div className="flex items-center gap-2 mb-3">
-                  <Badge variant="secondary">
-                    {exercise.category}
-                  </Badge>
+                  <Badge variant="secondary">{exercise.category}</Badge>
                   <Badge variant={exercise.difficulty === 'Beginner' ? 'default' : 'outline'}>
                     {exercise.difficulty}
                   </Badge>

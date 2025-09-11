@@ -10,6 +10,7 @@ const passport = require("passport");
 const User = require("./models/user");
 const LocalStrategy = require("passport-local");
 const passportLocalMongoose = require("passport-local-mongoose");
+// const Hub = require("./models/Hub")
 
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -77,6 +78,11 @@ app.get("/counselors", async (req, res) => {
     res.status(500).json({ message: "Error fetching counsellors", error: error.message });
   }
 });
+
+// resources hub
+const videoRoutes = require('./routes/videoRoutes');
+app.use('/hub', videoRoutes);
+
 
 app.post("/appointments", async (req, res) => {
   try {
