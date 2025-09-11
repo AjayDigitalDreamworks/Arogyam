@@ -31,15 +31,17 @@ export default function Resources() {
     const fetchResources = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/hub/'); // Replace with actual API URL
+        const response = await axios.get('http://localhost:3000/hub/'); // Replace with actual API URL
         const data = response.data;
+        console.log(data);
 
         // Safe fallback in case any key is missing
         setResources({
-          videos: data.videos || [],
-          guides: data.guides || [],
-          exercises: data.exercises || []
-        });
+  videos: data.videos || data || [],
+  guides: [],
+  exercises: []
+});
+
       } catch (err) {
         console.error('Error fetching resources:', err);
         setError("Failed to load resources");

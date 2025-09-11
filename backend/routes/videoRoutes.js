@@ -63,9 +63,22 @@ router.post('/upload', uploadFiles, async (req, res) => {
 
 // View all videos
 router.get('/', async (req, res) => {
-  const videos = await Video.find();
-  res.render('hub', { videos });
+  try {
+    const videos = await Video.find();
+    const guides = [];      // Add this if you plan to return guides
+    const exercises = [];   // Add this if you plan to return exercises
+
+    res.json({
+      videos,
+      guides,
+      exercises
+    });
+  } catch (error) {
+    console.error("Failed to fetch resources:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
+
 
 // Watch video
 router.get('/watch/:id', async (req, res) => {
