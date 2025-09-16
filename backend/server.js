@@ -144,7 +144,7 @@ app.post("/signup", async (req, res) => {
         return res.status(500).send("Error logging in after registration: " + err.message);
       }
       console.log('User registered and logged in:', req.user);
-      res.redirect("http://localhost:8080/");
+      res.redirect("http://localhost:8080/dashboard");
     });
   } catch (error) {
     console.error('Signup error:', error);

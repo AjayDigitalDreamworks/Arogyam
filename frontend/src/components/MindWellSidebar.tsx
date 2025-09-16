@@ -80,7 +80,7 @@ export function MindWellSidebar() {
             </div>
             {!isCollapsed && (
               <div>
-                <h1 className="text-xl font-bold text-primary">MindWell</h1>
+                <h1 className="text-xl font-bold text-primary">Arogyam</h1>
                 <p className="text-xs text-muted-foreground">
                   Student Wellness
                 </p>

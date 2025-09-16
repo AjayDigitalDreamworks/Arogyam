@@ -12,7 +12,7 @@ function LandingFooter() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Heart className="w-5 h-5 text-white dark:text-black" />
               </div>
-              <span className="text-xl font-bold text-primary">MindWell</span>
+              <span className="text-xl font-bold text-primary">Arogyam</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Supporting college students' mental wellness journey.
@@ -90,7 +90,7 @@ function LandingFooter() {
 
         <div className="border-t border-border mt-8 pt-6 text-center text-sm text-muted-foreground">
           <p>
-            © 2024 MindWell. All rights reserved. Your mental health matters.
+            © 2025 Arogyam. All rights reserved. Your mental health matters.
           </p>
         </div>
       </div>

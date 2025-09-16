@@ -17,17 +17,17 @@ const Landing = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white dark:text-black" />
             </div>
-            <span className="text-xl font-bold text-primary">MindWell</span>
+            <span className="text-xl font-bold text-primary">Arogyam</span>
           </div>
-          
+
           <nav className="hidden md:flex items-center gap-6">
             <Link to="/" className="text-primary font-medium border-b-2 border-primary pb-1">Home</Link>
             <Link to="/landing-resources" className="text-muted-foreground hover:text-primary transition-colors">Resources</Link>
             <Link to="/landing-support" className="text-muted-foreground hover:text-primary transition-colors">Support</Link>
             <Link to="/landing-booking" className="text-muted-foreground hover:text-primary transition-colors">Book Session</Link>
           </nav>
-          
-          
+
+
           <div className="flex items-center gap-4">
             <ThemeToggle />
             {/* <Button className="bg-primary hover:bg-primary/90" asChild>
@@ -35,7 +35,9 @@ const Landing = () => {
             </Button> */}
 
             <Button className="bg-primary hover:bg-primary/90">
-              Get Help Now
+            <a href="http://localhost:3000/signup">signup</a>
+
+
             </Button>
           </div>
         </div>
@@ -154,7 +156,7 @@ const Landing = () => {
                   <Brain className="w-5 h-5 text-white" />
                 </div>
                 <div className="text-left">
-                  <p className="font-semibold">MindWell Assistant</p>
+                  <p className="font-semibold">Arogyam Assistant</p>
                   <p className="text-sm text-muted-foreground">Always here to help</p>
                 </div>
               </div>

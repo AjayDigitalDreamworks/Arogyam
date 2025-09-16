@@ -16,7 +16,7 @@ const LandingSupport = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white dark:text-black" />
             </div>
-            <span className="text-xl font-bold text-primary">MindWell</span>
+            <span className="text-xl font-bold text-primary">Arogyam</span>
           </div>
           
           <nav className="hidden md:flex items-center gap-6">

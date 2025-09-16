@@ -32,16 +32,16 @@ const LandingBooking = () => {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white dark:text-black" />
             </div>
-            <span className="text-xl font-bold text-primary">MindWell</span>
+            <span className="text-xl font-bold text-primary">Arogyam</span>
           </div>
-          
+
           <nav className="hidden md:flex items-center gap-6">
             <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">Home</Link>
             <Link to="/landing-resources" className="text-muted-foreground hover:text-primary transition-colors">Resources</Link>
             <Link to="/landing-support" className="text-muted-foreground hover:text-primary transition-colors">Support</Link>
             <Link to="/landing-booking" className="text-primary font-medium border-b-2 border-primary pb-1">Book Session</Link>
           </nav>
-          
+
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <Button className="bg-primary hover:bg-primary/90">
@@ -290,7 +290,7 @@ const LandingBooking = () => {
       {/* Benefits Section */}
       <section className="px-6 py-16 bg-muted/30">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">Why Book with MindWell?</h2>
+          <h2 className="text-3xl font-bold mb-8">Why Book with Arogyam?</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
