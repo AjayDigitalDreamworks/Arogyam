@@ -90,7 +90,7 @@ function LandingFooter() {
 
         <div className="border-t border-border mt-8 pt-6 text-center text-sm text-muted-foreground">
           <p>
-            © 2025 Arogyam. All rights reserved. Your mental health matters.
+            © 2024 MindWell. All rights reserved. Your mental health matters.
           </p>
         </div>
       </div>
