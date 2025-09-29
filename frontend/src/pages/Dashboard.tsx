@@ -10,71 +10,85 @@ import { WellnessTip } from "@/components/WellnessTip";
 import { EmergencySupport } from "@/components/EmergencySupport";
 import { UpcomingAppointments } from "@/components/UpcomingAppointments";
 import { LatestResources } from "@/components/LatestResources";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 const wellnessData = [
-  {
-    title: "Mood Today",
-    subtitle: "Good - Keep it up!",
-    icon: Heart,
-    iconBgColor: "bg-wellness-green",
-    progress: 85,
-    progressColor: "green",
-    emoji: "💚",
-  },
-  {
-    title: "Sleep Quality",
-    subtitle: "7.5 hours last night",
-    icon: Moon,
-    iconBgColor: "bg-wellness-blue",
-    progress: 75,
-    progressColor: "blue",
-    emoji: "🌙",
-  },
-  {
-    title: "Study Stress",
-    subtitle: "Moderate level",
-    icon: GraduationCap,
-    iconBgColor: "bg-wellness-orange",
-    progress: 60,
-    progressColor: "orange",
-    emoji: "🎓",
-  },
-  {
-    title: "Streak",
-    subtitle: "12 days checking in",
-    icon: Flame,
-    iconBgColor: "bg-wellness-yellow",
-    progress: 100,
-    progressColor: "yellow",
-    emoji: "🔥",
-  },
+	{
+		title: "Mood Today",
+		subtitle: "Good - Keep it up!",
+		icon: Heart,
+		iconBgColor: "bg-wellness-green",
+		progress: 85,
+		progressColor: "green",
+		emoji: "💚",
+	},
+	{
+		title: "Sleep Quality",
+		subtitle: "7.5 hours last night",
+		icon: Moon,
+		iconBgColor: "bg-wellness-blue",
+		progress: 75,
+		progressColor: "blue",
+		emoji: "🌙",
+	},
+	{
+		title: "Study Stress",
+		subtitle: "Moderate level",
+		icon: GraduationCap,
+		iconBgColor: "bg-wellness-orange",
+		progress: 60,
+		progressColor: "orange",
+		emoji: "🎓",
+	},
+	{
+		title: "Streak",
+		subtitle: "12 days checking in",
+		icon: Flame,
+		iconBgColor: "bg-wellness-yellow",
+		progress: 100,
+		progressColor: "yellow",
+		emoji: "🔥",
+	},
 ];
 
 export default function Dashboard() {
-  return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-6 py-8 max-w-7xl">
-        {/* Hero Section */}
-        <HeroSection userName="user" />
+	const [user, setUser] = useState(null);
+	useEffect(() => {
+		axios
+			.get("http://localhost:3000/current_user", { withCredentials: true })
+			.then((response) => {
+				console.log("Fetched user:", response.data);
+				setUser(response.data);
+			})
+			.catch((error) => {
+				console.error("Error fetching user:", error);
+			});
+	}, []);
+	return (
+		<div className="min-h-screen bg-background">
+			<main className="container mx-auto px-6 py-8 max-w-7xl">
+				{/* Hero Section */}
+				<HeroSection userName={user?.username || "User"} />
 
-        {/* Wellness Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {wellnessData.map((data, index) => (
-            <WellnessCard
-              key={data.title}
-              title={data.title}
-              subtitle={data.subtitle}
-              icon={data.icon}
-              iconBgColor={data.iconBgColor}
-              progress={data.progress}
-              progressColor={data.progressColor}
-              emoji={data.emoji}
-            />
-          ))}
-        </div>
+				{/* Wellness Cards Grid */}
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+					{wellnessData.map((data, index) => (
+						<WellnessCard
+							key={data.title}
+							title={data.title}
+							subtitle={data.subtitle}
+							icon={data.icon}
+							iconBgColor={data.iconBgColor}
+							progress={data.progress}
+							progressColor={data.progressColor}
+							emoji={data.emoji}
+						/>
+					))}
+				</div>
 
-        {/* Main Content Grid */}
-        {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+				{/* Main Content Grid */}
+				{/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           Left Column - Mood Tracker
           <div className="lg:col-span-1">
             <MoodTracker />
@@ -87,50 +101,48 @@ export default function Dashboard() {
           </div>
         </div> */}
 
-        <div className="mb-8">
-          <MoodTracker />
-        </div>
-        {/* <div className="mb-8">
+				<div className="mb-8">
+					<MoodTracker />
+				</div>
+				{/* <div className="mb-8">
           <MoodTracker />
          </div> */}
 
-        {/* Upcoming Appointments */}
-        <div className="mb-8">
-          <UpcomingAppointments />
-        </div>
+				{/* Upcoming Appointments */}
+				<div className="mb-8">
+					<UpcomingAppointments />
+				</div>
 
-        {/* Quick Actions */}
-        <div className="mb-8">
-          <QuickActions />
-        </div>
+				{/* Quick Actions */}
+				<div className="mb-8">
+					<QuickActions />
+				</div>
 
-       
-         {/* Latest Resources */}
-        <div className="mb-8">
-          <LatestResources />
-        </div>
+				{/* Latest Resources */}
+				<div className="mb-8">
+					<LatestResources />
+				</div>
 
-        {/* Community Highlights */}
-        <div className="mb-8">
-          <CommunityHighlights />
-        </div>
+				{/* Community Highlights */}
+				<div className="mb-8">
+					<CommunityHighlights />
+				</div>
 
-         {/* Wellness Tip */}
-        <div className="mb-8">
-          <WellnessTip />
-        </div>
+				{/* Wellness Tip */}
+				<div className="mb-8">
+					<WellnessTip />
+				</div>
 
+				{/* Wellness Journey */}
+				<div className="mb-8">
+					<WellnessJourney />
+				</div>
 
-        {/* Wellness Journey */}
-        <div className="mb-8">
-          <WellnessJourney />
-        </div>
-
-        {/* Emergency Support */}
-        <div>
-          <EmergencySupport />
-        </div>
-      </main>
-    </div>
-  );
+				{/* Emergency Support */}
+				<div>
+					<EmergencySupport />
+				</div>
+			</main>
+		</div>
+	);
 }

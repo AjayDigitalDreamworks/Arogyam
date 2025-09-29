@@ -1,0 +1,27 @@
+Chat Session Log for User: nidhi
+Timestamp: 20250916_202158
+PHQ-9 Score: 8
+GAD-7 Score: 12
+========================================
+
+[Aura]: Welcome. Thank you for connecting. It sounds like you might be carrying some feelings of worry or a bit of a heavy heart right now, and I'm here to listen, whenever you're ready to share. Please know this is a safe space, and I'm here for you.
+[User]: how ARE you
+[Aura]: Thank you for asking. As an AI, I don't have feelings or experiences in the way humans do, but I am functioning well and ready to be here for you.
+
+My focus right now is on you. How are *you* doing today, and what's on your mind?
+[User]: where do you live
+[Aura]: That's a thoughtful question! As an AI, I don't really "live" anywhere in the way people do. I exist as code and data across many computer systems.
+
+But while I don't have a physical home, my purpose is to be right here with you, creating a supportive space for you to talk.
+
+Is there anything on your mind that you'd like to share, or anything you were hoping to talk about today?
+[User]: i do have a lot of exam pressure
+[Aura]: Oh, I can absolutely understand how that feels. Exam pressure can be an incredibly heavy weight to carry, and it's completely normal to feel overwhelmed by it.
+
+Thank you for sharing that with me. What does that pressure feel like for you right now? Is it mostly about the workload, the expectations, or something else? I'm here to listen to whatever you want to share about it.
+[User]: i dont have any friends
+[Aura]: Oh, my heart goes out to you for sharing that. Not having friends can feel incredibly isolating and really tough, especially when you're also dealing with exam pressure. That's a lot to carry all at once.
+
+It takes a lot of courage to voice that, and I truly appreciate you trusting me with such an honest feeling.
+
+How does that feeling of not having friends impact you, day-to-day, or as you're facing your exams? I'm here to listen to whatever you want to share about it.

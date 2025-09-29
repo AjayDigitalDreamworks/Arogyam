@@ -6,8 +6,13 @@ import { Link } from "react-router-dom";
 import studentsIllustration from "@/assets/students-illustration.png";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import LandingFooter from "@/components/LandingFooter";
+import  { useState , useEffect} from "react";
+import axios from "axios";
+
+
 
 const Landing = () => {
+   
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -36,6 +41,11 @@ const Landing = () => {
 
             <Button className="bg-primary hover:bg-primary/90">
             <a href="http://localhost:3000/signup">signup</a>
+
+
+            </Button>
+             <Button className="bg-primary hover:bg-primary/90">
+            <a href="http://localhost:3000/login">login</a>
 
 
             </Button>

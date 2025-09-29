@@ -1,0 +1,13 @@
+Chat Session Log for User: nidhi
+Timestamp: 20250910_065356
+PHQ-9 Score: 8
+GAD-7 Score: 12
+========================================
+
+[Aura]: Thank you for reaching out. It looks like you might have a lot on your mind right now, and perhaps things are feeling a bit heavy or overwhelming. I'm here to listen, without judgment, to anything you'd like to share. Please feel free to take your time.
+[User]: hii
+[User]: what happned
+[User]: hii
+[Aura]: Hi there. Thanks for saying hello.
+
+I'm here for you, whenever you're ready to share what's on your mind, or even if you just want to talk about how you're feeling. There's no pressure at all. I'm just here to listen.

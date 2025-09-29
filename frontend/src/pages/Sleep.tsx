@@ -4,10 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export default function Sleep() {
   const [sleepHours, setSleepHours] = useState(7.5);
   const [sleepQuality, setSleepQuality] = useState(4);
+  const [showLogModal, setShowLogModal] = useState(false);
+  const [logHours, setLogHours] = useState("");
+  const [logQuality, setLogQuality] = useState(3);
 
   const sleepData = [
     { date: "Mon", hours: 8, quality: 5 },
@@ -26,6 +30,15 @@ export default function Sleep() {
     "Avoid screens 1 hour before bed",
     "Limit caffeine after 2 PM"
   ];
+
+  const handleLogSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSleepHours(Number(logHours));
+    setSleepQuality(logQuality);
+    setShowLogModal(false);
+    setLogHours("");
+    setLogQuality(3);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -164,11 +177,51 @@ export default function Sleep() {
 
         {/* Log Sleep Button */}
         <div className="text-center">
-          <Button className="gradient-primary text-white px-8 py-3">
+          <Button
+            className="gradient-primary text-white px-8 py-3"
+            onClick={() => setShowLogModal(true)}
+          >
             <Plus className="w-5 h-5 mr-2" />
             Log Last Night's Sleep
           </Button>
         </div>
+
+        {/* Log Sleep Modal */}
+        <Dialog open={showLogModal} onOpenChange={setShowLogModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Log Last Night's Sleep</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleLogSubmit} className="space-y-4">
+              <div>
+                <label className="block mb-1 font-medium">Hours Slept</label>
+                <input
+                  type="number"
+                  min="0"
+                  max="24"
+                  step="0.1"
+                  value={logHours}
+                  onChange={e => setLogHours(e.target.value)}
+                  className="w-full border rounded px-3 py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block mb-1 font-medium">Sleep Quality</label>
+                <select
+                  value={logQuality}
+                  onChange={e => setLogQuality(Number(e.target.value))}
+                  className="w-full border rounded px-3 py-2"
+                >
+                  {[1,2,3,4,5].map(q => (
+                    <option key={q} value={q}>{q} Star{q > 1 ? "s" : ""}</option>
+                  ))}
+                </select>
+              </div>
+              <Button type="submit" className="w-full">Save</Button>
+            </form>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );

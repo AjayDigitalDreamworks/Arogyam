@@ -41,6 +41,7 @@ const UserSchema = new mongoose.Schema({
     enum: ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate', 'Other']
   },
 
+
   // Mood Tracking
   moodHistory: [{
     date: { type: Date, default: Date.now },
@@ -48,10 +49,24 @@ const UserSchema = new mongoose.Schema({
     notes: { type: String, trim: true }
   }],
 
+  // Sleep Tracking
+  sleepHistory: [{
+    date: { type: Date, default: Date.now },
+    hours: { type: Number, min: 0, max: 24, required: true },
+    quality: { type: Number, min: 1, max: 5, required: true },
+   
+  }],
+
   // Appointments
   appointments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Appointment'
+  }],
+  //quiz score
+  quizScores: [{
+    score: { type: Number, required: true },
+    quiz_type: { type: String, required: true },
+    date: { type: Date, default: Date.now }
   }],
   // Timestamps
   createdAt: { type: Date, default: Date.now },

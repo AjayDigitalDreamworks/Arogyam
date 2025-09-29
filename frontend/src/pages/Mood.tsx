@@ -16,6 +16,7 @@ import {
   Share2
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 const moods = [
   { emoji: "😭", label: "Very Sad", value: 1, color: "bg-red-500" },
@@ -59,7 +60,7 @@ export default function Mood() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const { toast } = useToast();
 
-  const handleMoodSubmit = () => {
+  const handleMoodSubmit = async () => {
     if (!selectedMood) {
       toast({
         title: "Please select a mood",
@@ -69,13 +70,25 @@ export default function Mood() {
       return;
     }
 
-    toast({
-      title: "Mood Recorded!",
-      description: "Your mood has been saved to your wellness journey.",
-    });
-
-    setSelectedMood(null);
-    setMoodNote('');
+    try {
+      await axios.post("http://localhost:3000/api/mood", {
+        mood: selectedMood,
+        note: moodNote,
+        date: selectedDate || new Date()
+      });
+      toast({
+        title: "Mood Recorded!",
+        description: "Your mood has been saved to your wellness journey.",
+      });
+      setSelectedMood(null);
+      setMoodNote('');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Could not save your mood. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getMoodColor = (value: number) => {

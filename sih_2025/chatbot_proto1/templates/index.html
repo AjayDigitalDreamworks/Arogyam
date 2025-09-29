@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura - Your AI Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Simple scrollbar styling */
+        #chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-box::-webkit-scrollbar-track {
+            background: #2d3748; /* gray-800 */
+        }
+        #chat-box::-webkit-scrollbar-thumb {
+            background: #4a5568; /* gray-600 */
+            border-radius: 4px;
+        }
+        .ai-bubble {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white font-sans flex flex-col items-center justify-center h-screen p-4">
+
+    <div class="w-full max-w-2xl h-full flex flex-col bg-gray-800 shadow-2xl rounded-2xl overflow-hidden">
+
+        <!-- Setup Screen -->
+        <div id="setup-container" class="flex flex-col items-center justify-center h-full p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-teal-300">Welcome to Aura</h1>
+                <p class="text-gray-400 mt-2">Your safe space to talk. Please enter the details below to begin.</p>
+            </div>
+            <form id="setup-form" class="w-full max-w-sm space-y-4">
+                <div>
+                    <label for="userId" class="block text-sm font-medium text-gray-300">User ID</label>
+                    <input type="text" id="userId" name="userId" required
+                           class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <div>
+                    <label for="phq9" class="block text-sm font-medium text-gray-300">PHQ-9 Score (0-27)</label>
+                    <input type="number" id="phq9" name="phq9" min="0" max="27" required
+                           class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <div>
+                    <label for="gad7" class="block text-sm font-medium text-gray-300">GAD-7 Score (0-21)</label>
+                    <input type="number" id="gad7" name="gad7" min="0" max="21" required
+                           class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                </div>
+                <button type="submit"
+                        class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                    Start Chat
+                </button>
+            </form>
+        </div>
+
+        <!-- Chat Screen (Initially Hidden) -->
+        <div id="chat-container" class="hidden flex flex-col h-full">
+            <header class="bg-gray-900 p-4 shadow-md text-center">
+                <h2 class="text-xl font-semibold text-teal-300">Aura - AI Companion</h2>
+            </header>
+            <main id="chat-box" class="flex-1 p-6 overflow-y-auto space-y-4">
+                <!-- Chat messages will be appended here -->
+            </main>
+            <footer class="p-4 bg-gray-900">
+                <form id="chat-form" class="flex items-center space-x-3">
+                    <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off" required
+                           class="flex-1 bg-gray-700 border-gray-600 rounded-full py-3 px-5 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                    <button type="submit"
+                            class="bg-teal-500 hover:bg-teal-600 text-white font-bold p-3 rounded-full transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </form>
+            </footer>
+        </div>
+
+    </div>
+
+    <script>
+        const setupContainer = document.getElementById('setup-container');
+        const chatContainer = document.getElementById('chat-container');
+        const setupForm = document.getElementById('setup-form');
+        const chatForm = document.getElementById('chat-form');
+        const chatBox = document.getElementById('chat-box');
+        const messageInput = document.getElementById('message-input');
+
+        let logFile = '';
+        let chatHistory = [];
+
+        // --- Event Listener for Setup Form ---
+        setupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('userId').value;
+            const phq9 = document.getElementById('phq9').value;
+            const gad7 = document.getElementById('gad7').value;
+
+            const response = await fetch('/start_chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, phq9, gad7 })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                logFile = data.logFile;
+                chatHistory = data.history;
+
+                addMessageToChat('Aura', data.initialMessage, true);
+
+                setupContainer.classList.add('hidden');
+                chatContainer.classList.remove('hidden');
+                chatContainer.classList.add('flex');
+            } else {
+                alert('Error starting chat. Please check the console.');
+            }
+        });
+
+        // --- Event Listener for Chat Form ---
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userMessage = messageInput.value.trim();
+            if (!userMessage) return;
+
+            addMessageToChat('You', userMessage, false);
+            messageInput.value = '';
+
+            const response = await fetch('/send_message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage, logFile, history: chatHistory })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                chatHistory = data.history;
+                addMessageToChat('Aura', data.reply, true);
+            } else {
+                addMessageToChat('Aura', 'Sorry, something went wrong. Please try again.', true);
+            }
+        });
+
+        // --- Helper Function to Add Messages to UI ---
+        function addMessageToChat(sender, message, isAI) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('w-full', 'flex');
+
+            const bubble = document.createElement('div');
+            bubble.classList.add('max-w-md', 'rounded-2xl', 'p-4', 'shadow');
+            bubble.textContent = message;
+
+            if (isAI) {
+                messageDiv.classList.add('justify-start', 'ai-bubble');
+                bubble.classList.add('bg-teal-600', 'rounded-bl-none');
+            } else {
+                messageDiv.classList.add('justify-end');
+                bubble.classList.add('bg-gray-700', 'text-white', 'rounded-br-none');
+            }
+            
+            messageDiv.appendChild(bubble);
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to bottom
+        }
+
+    </script>
+</body>
+</html>
+```
+

@@ -89,6 +89,15 @@ app.get("/counselors", async (req, res) => {
     res.status(500).json({ message: "Error fetching counsellors", error: error.message });
   }
 });
+ // sending user data to the frontend
+app.get("/current_user", (req, res) => {
+  if (req.isAuthenticated()) {  
+    res.json({ user: req.user });
+  } else {
+    res.status(401).json({ user: null });
+  }
+});
+
 
 
 const videoRoutes = require('./routes/videoRoutes');
