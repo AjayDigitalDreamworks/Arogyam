@@ -19,6 +19,7 @@ import Feedback from "./pages/Feedback";
 
 import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
+import Games from "./pages/Games";
 import LandingResources from "./pages/LandingResources";
 import LandingSupport from "./pages/LandingSupport";
 import LandingBooking from "./pages/LandingBooking";
@@ -42,6 +43,7 @@ const App = () => (
             {/* Dashboard pages (post-login) */}
             <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
             <Route path="/chat" element={<Layout><Chat /></Layout>} />
+            <Route path="/games" element={<Layout><Games /></Layout>} />
             <Route path="/appointments" element={<Layout><Appointments /></Layout>} />
             <Route path="/resources" element={<Layout><Resources /></Layout>} />
             <Route path="/community" element={<Layout><Community /></Layout>} />

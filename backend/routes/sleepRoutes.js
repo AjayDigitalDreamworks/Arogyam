@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     // For demo, assume userId is sent in body (replace with req.user._id if using auth)
     const { userId, hours, quality } = req.body;
     if (!userId || !hours || !quality) {
-      return res.status(400).json({ message: 'userId and mood are required' });
+      return res.status(400).json({ message: 'sleep hours are required' });
     }
     const user = await User.findById(userId);
     if (!user) {
