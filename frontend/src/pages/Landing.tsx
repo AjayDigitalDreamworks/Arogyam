@@ -40,12 +40,12 @@ const Landing = () => {
             </Button> */}
 
             <Button className="bg-primary hover:bg-primary/90">
-            <a href="http://localhost:3000/signup">signup</a>
+            <a href="https://sih-2025-arogyam-0cf2.onrender.com/signup">signup</a>
 
 
             </Button>
              <Button className="bg-primary hover:bg-primary/90">
-            <a href="http://localhost:3000/login">login</a>
+            <a href="https://sih-2025-arogyam-0cf2.onrender.com/login">login</a>
 
 
             </Button>

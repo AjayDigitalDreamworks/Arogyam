@@ -63,7 +63,7 @@ router.post("/", async (req, res, next) => {
       }
 
       console.log('Login successful, user:', req.user);
-      return res.redirect("http://localhost:8080/");
+      return res.redirect("https://sih-2025-arogyam.onrender.com/");
     });
   })(req, res, next);
 });

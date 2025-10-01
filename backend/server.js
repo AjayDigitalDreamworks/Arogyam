@@ -17,14 +17,24 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const allowedOrigins = [
+  "https://sih-2025-arogyam.onrender.com",
+  "http://localhost:8080",
+];
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "https://sih-2025-arogyam.onrender.com",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS (Socket.IO)"));
+      }
+    },
     credentials: true,
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+  },
 });
-
 const url = process.env.MONGO_URL;
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -44,12 +54,32 @@ const sessionOption = {
 };
 
 
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
+//   credentials: true, // Allow cookies to be sent
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
+
+
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
-  credentials: true, // Allow cookies to be sent
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+
+
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
@@ -158,7 +188,7 @@ app.post("/signup", async (req, res) => {
         return res.status(500).send("Error logging in after registration: " + err.message);
       }
       console.log('User registered and logged in:', req.user);
-      res.redirect("http://localhost:8080/dashboard");
+      res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
     });
   } catch (error) {
     console.error('Signup error:', error);
@@ -190,7 +220,7 @@ app.post("/login", (req, res, next) => {
       }
 
       console.log("Login successful, user:", req.user);
-     res.redirect("http://localhost:8080/dashboard");
+     res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
     });
   })(req, res, next);
 });
