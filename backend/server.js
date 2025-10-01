@@ -27,7 +27,8 @@ const server = http.createServer(app);
 const allowedOrigins = [
   process.env.FRONTEND_URL || "https://sih-2025-arogyam.onrender.com",
   process.env.LOCAL_URL || "http://localhost:8080",
-  "https://sih-2025-arogyam-0cf2.onrender.com"
+  "https://sih-2025-arogyam-0cf2.onrender.com",
+  "http://localhost:3000"
 ];
 
 // ✅ Apply CORS to Express
