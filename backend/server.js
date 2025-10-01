@@ -1,5 +1,3 @@
-
-
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -68,10 +66,10 @@ app.use((req, res, next) => {
   next();
 });
 
+
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
 
 const path = require("path");
 app.set("view engine", "ejs");
@@ -172,32 +170,33 @@ app.get("/login", (req, res) => {
   res.render("login.ejs");
 });
 app.post('/addvolunteer', verifyToken, addVolunteer);
-/*
+
 app.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      console.error('Authentication error:', err);
-      return res.status(500).send("Authentication error: " + err.message);
+      console.error("Authentication error:", err);
+      return res.status(500).json({ message: "Authentication error", error: err.message });
     }
     if (!user) {
-      console.log('Login failed: Invalid credentials');
-      return res.status(401).send("Invalid credentials");
+      console.log("Login failed: Invalid credentials");
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     req.login(user, (err) => {
       if (err) {
-        console.error('Login error:', err);
-        return res.status(500).send("Login error: " + err.message);
+        console.error("Login error:", err);
+        return res.status(500).json({ message: "Login error", error: err.message });
       }
 
-      console.log('Login successful, user:', req.user);
-      res.redirect("http://localhost:8080/");
+      console.log("Login successful, user:", req.user);
+     res.redirect("http://localhost:8080/dashboard");
     });
   })(req, res, next);
 });
-*/
+
+
 const volunteerRoutes = require('./routes/volunteer');
-app.use('/login', volunteerRoutes);
+app.use('/login/volunteer', volunteerRoutes);
 
 app.post("/logout", (req, res) => {
   req.logout((err) => {
