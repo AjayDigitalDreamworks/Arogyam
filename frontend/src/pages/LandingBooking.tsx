@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Clock, User, Shield, Heart, ArrowLeft, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import API_BASE_URL from "@/config/api";
 import LandingFooter from "@/components/LandingFooter";
 
 const LandingBooking = () => {

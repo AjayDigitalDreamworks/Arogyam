@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import API_BASE_URL from "@/config/api";
 
 export default function Sleep() {
   const [sleepHours, setSleepHours] = useState(7.5);
@@ -37,7 +38,7 @@ export default function Sleep() {
   const { toast } = useToast();
   useEffect(() => {
     axios
-      .get("http://localhost:3000/current_user", { withCredentials: true })
+      .get(`${API_BASE_URL}/current_user`, { withCredentials: true })
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
@@ -74,7 +75,7 @@ export default function Sleep() {
       return;
     }
     try {
-      await axios.post("http://localhost:3000/api/sleep", {
+      await axios.post(`${API_BASE_URL}/api/sleep`, {
         userId,
         hours,
         quality: sleepQuality, // <-- add this

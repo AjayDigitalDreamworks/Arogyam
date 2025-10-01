@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 
 // Set your actual Cloudinary cloud name below
+import API_BASE_URL from "@/config/api";
 const cloudinaryBase = "https://res.cloudinary.com/dlpyvzfis/video/upload/";
 
 export default function Resources() {
@@ -46,7 +47,7 @@ export default function Resources() {
 
         
 
-        const response = await axios.get('http://localhost:3000/hub/'); // Replace with actual API URL
+        const response = await axios.get(`${API_BASE_URL}/hub/`); // Replace with actual API URL
 
         const data = response.data;
 

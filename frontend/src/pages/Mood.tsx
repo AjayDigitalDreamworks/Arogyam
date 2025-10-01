@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
-
+import API_BASE_URL from "@/config/api";
 
 import { 
   Heart, 
@@ -69,7 +69,7 @@ export default function Mood({ userId }: MoodProps) {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/current_user", { withCredentials: true })
+      .get(`${API_BASE_URL}/current_user`, { withCredentials: true })
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
@@ -97,7 +97,7 @@ export default function Mood({ userId }: MoodProps) {
       return;
     }
     try {
-      await axios.post("http://localhost:3000/api/mood", {
+      await axios.post(`${API_BASE_URL}/api/mood`, {
         userId: user._id,
         mood: selectedMood,
         note: moodNote,

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Brain, GamepadIcon, Trophy, Clock, Play, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import API_BASE_URL from "@/config/api";
 
 const quizzes = [
   {
@@ -118,7 +119,7 @@ export default function Quizzes() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/current_user", { withCredentials: true })
+      .get(`${API_BASE_URL}/current_user`, { withCredentials: true })
       .then((response) => {
         setUser(response.data.user);
       })
@@ -129,7 +130,7 @@ export default function Quizzes() {
 
   const sendQuizScore = async (userId: string, score: number, quiz_type: string, date: Date = new Date()) => {
     try {
-      await axios.post("http://localhost:3000/api/quiz", {
+      await axios.post(`${API_BASE_URL}/api/quiz`, {
         userId,
         score,
         quiz_type,

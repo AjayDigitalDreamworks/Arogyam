@@ -13,6 +13,7 @@ import { LatestResources } from "@/components/LatestResources";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Mood from "./Mood";
+import API_BASE_URL from "@/config/api";
 
 const wellnessData = [
 	{
@@ -57,7 +58,7 @@ export default function Dashboard() {
 	const [user, setUser] = useState(null);
 	useEffect(() => {
 		axios
-			.get("http://localhost:3000/current_user", { withCredentials: true })
+			.get(`${API_BASE_URL}/current_user`, { withCredentials: true })
 			.then((response) => {
 				console.log("Fetched user:", response.data.user);
 				setUser(response.data.user);
