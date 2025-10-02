@@ -54,13 +54,38 @@ const sessionOption = {
 };
 
 
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
+//   credentials: true, // Allow cookies to be sent
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
+
+
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
-  credentials: true, // Allow cookies to be sent
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      process.env.FRONTEND_URL_RENDER, // New environment variable for Render URL
+      "http://localhost:8080", // Local development URL
+      "https://sih-2025-arogyam.onrender.com",
+      "http://localhost:3000",
+      "https://sih-2025-arogyam-0cf2.onrender.com" // Explicitly add the deployed URL
+    ];
+
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 
 
 // app.use(cors({
