@@ -44,16 +44,60 @@ mongoose
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 
+// const sessionOption = {
+//   secret: process.env.SESSION_SECRET || "yadavji06",
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 * 24 * 7, 
+//     httpOnly: true, 
+//     secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
+//     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
+//     domain: '.onrender.com',
+//   },
+//   store: MongoStore.create({
+//     mongoUrl: process.env.MONGO_URL,
+//     collectionName: 'sessions',
+//   }),
+// };
+
+
+
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     const allowedOrigins = [
+//       process.env.FRONTEND_URL_RENDER, 
+//       "http://localhost:8080", 
+//       "https://sih-2025-arogyam.onrender.com",
+//       "http://localhost:3000",
+//       "https://sih-2025-arogyam-0cf2.onrender.com" 
+//     ];
+
+//     if (!origin) return callback(null, true);
+
+//     if (allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
+
+
+
 const sessionOption = {
   secret: process.env.SESSION_SECRET || "yadavji06",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, 
-    httpOnly: true, 
-    secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
-    domain: '.onrender.com',
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    httpOnly: true,  // Make sure JavaScript can't access the cookie
+    secure: process.env.NODE_ENV === 'production', // Secure cookies only in production
+    sameSite: 'None', // Necessary for cross-origin cookies
+    domain: '.onrender.com', // Cookie shared between backend and frontend subdomains
   },
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URL,
@@ -62,36 +106,24 @@ const sessionOption = {
 };
 
 
-
-// app.use(cors({
-//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
-//   credentials: true, // Allow cookies to be sent
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
-
-
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
-      process.env.FRONTEND_URL_RENDER, 
+      process.env.FRONTEND_URL_RENDER ,
+       "https://sih-2025-arogyam.onrender.com",
       "http://localhost:8080", 
-      "https://sih-2025-arogyam.onrender.com",
-      "http://localhost:3000",
-      "https://sih-2025-arogyam-0cf2.onrender.com" 
+      "https://sih-2025-arogyam-0cf2.onrender.com",
     ];
 
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true,
+  credentials: true,  // Allow cookies to be sent with requests
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 
@@ -243,10 +275,15 @@ app.post("/login", (req, res, next) => {
       }
 
       console.log("Login successful, user:", req.user);
-     res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
+
+      // Ensure the session is saved before redirect
+      req.session.save(() => {
+        res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
+      });
     });
   })(req, res, next);
 });
+
 
 
 const volunteerRoutes = require('./routes/volunteer');
