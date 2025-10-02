@@ -53,6 +53,7 @@ const sessionOption = {
     httpOnly: true, 
     secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
+    domain: '.onrender.com',
   },
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URL,
