@@ -25,7 +25,49 @@ const allowedOrigins = [
       "https://sih-2025-arogyam-0cf2.onrender.com" 
 ];
 
+const io = new Server(server, {
+  cors: {
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS (Socket.IO)"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST"],
+  },
+});
+const url = process.env.MONGO_URL;
+mongoose
+  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB connected..."))
+  .catch((err) => console.log(err));
 
+const sessionOption = {
+  secret: process.env.SESSION_SECRET || "yadavji06",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7, 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
+  },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: 'sessions',
+  }),
+};
+
+
+
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
+//   credentials: true, // Allow cookies to be sent
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
 
 
 app.use(cors({
@@ -74,53 +116,6 @@ const path = require("path");
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
-
-
-
-const io = new Server(server, {
-  cors: {
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS (Socket.IO)"));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST"],
-  },
-});
-const url = process.env.MONGO_URL;
-mongoose
-  .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB connected..."))
-  .catch((err) => console.log(err));
-
-const sessionOption = {
-  secret: process.env.SESSION_SECRET || "yadavji06",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, 
-    httpOnly: true, 
-    secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
-  },
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URL,
-    collectionName: 'sessions',
-  }),
-};
-
-
-
-// app.use(cors({
-//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
-//   credentials: true, // Allow cookies to be sent
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
-
 
 
 
