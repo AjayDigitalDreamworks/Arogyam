@@ -93,6 +93,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+
+
+
 app.options('*', cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
@@ -101,6 +104,11 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  console.log('Session Data:', req.session);  // Log session data
+  next();
+});
 
 app.use((req, res, next) => {
   res.locals.currUser = req.user;
