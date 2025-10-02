@@ -42,15 +42,19 @@ mongoose
   .catch((err) => console.log(err));
 
 const sessionOption = {
-  secret: process.env.SESSION_SECRET || "yadavji06", // Secret for the session
-  resave: false, // Don't save session if it wasn't modified
-  saveUninitialized: false, // Don't save empty sessions
+  secret: process.env.SESSION_SECRET || "yadavji06",
+  resave: false,
+  saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-    httpOnly: true, // Can't be accessed via JavaScript
-    secure: process.env.NODE_ENV === 'production', // Set to true in production (HTTPS)
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Set to 'None' for cross-origin cookies in production
+    maxAge: 1000 * 60 * 60 * 24 * 7, 
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
   },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URL,
+    collectionName: 'sessions',
+  }),
 };
 
 
@@ -67,14 +71,13 @@ const sessionOption = {
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [
-      process.env.FRONTEND_URL_RENDER, // New environment variable for Render URL
-      "http://localhost:8080", // Local development URL
+      process.env.FRONTEND_URL_RENDER, 
+      "http://localhost:8080", 
       "https://sih-2025-arogyam.onrender.com",
       "http://localhost:3000",
-      "https://sih-2025-arogyam-0cf2.onrender.com" // Explicitly add the deployed URL
+      "https://sih-2025-arogyam-0cf2.onrender.com" 
     ];
 
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
@@ -88,21 +91,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     // Allow requests with no origin (like mobile apps or curl)
-//     if (!origin) return callback(null, true);
-//     if (allowedOrigins.includes(origin)) {
-//       return callback(null, true);
-//     } else {
-//       return callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true,
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
 
 
 
