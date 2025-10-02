@@ -17,16 +17,11 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-
-// 🔑 FIXED: Define allowedOrigins once at the top
 const allowedOrigins = [
-  "http://localhost:8080",
   "https://sih-2025-arogyam.onrender.com",
-  "http://localhost:3000",
-  "https://sih-2025-arogyam-0cf2.onrender.com",
+  "http://localhost:8080",
 ];
 
-// ✅ Socket.IO setup with CORS configuration
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
@@ -40,119 +35,160 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
-// ✅ MongoDB connection
 const url = process.env.MONGO_URL;
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 
-// ✅ Session configuration
 const sessionOption = {
-  secret: process.env.SESSION_SECRET || "yadavji06",
+  secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    maxAge: 1000 * 60 * 60 * 24 * 7,
     httpOnly: true,
-    secure: true, // Ensure this is true in production (HTTPS)
-    sameSite: 'None', // Important for cross-origin cookies
+    secure: false,
+    sameSite: 'lax'
   },
 };
 
-// 🔑 FIXED: CORS and Body Parser middleware setup
-app.use(cors({
-  origin: function (origin, callback) {
-    // If the origin is not specified (e.g., from Postman or mobile apps), allow it
-    if (!origin) return callback(null, true);
 
-    // If the origin is in the allowed list, allow the request
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      // Deny access if origin is not in the allowed list
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
   credentials: true, // Allow cookies to be sent
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+
+
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     // Allow requests with no origin (like mobile apps or curl)
+//     if (!origin) return callback(null, true);
+//     if (allowedOrigins.includes(origin)) {
+//       return callback(null, true);
+//     } else {
+//       return callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   allowedHeaders: ['Content-Type', 'Authorization']
+// }));
+
+
 
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
-// ✅ Initialize session and Passport.js
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ✅ Passport authentication setup
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-// ✅ Static files and view engine
-const path = require("path");
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.static(path.join(__dirname, "public")));
-
-// ✅ Logging current session user
 app.use((req, res, next) => {
   res.locals.currUser = req.user;
   console.log('Current user in session:', req.user);
   next();
 });
 
-// ✅ Default route for testing
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+const path = require("path");
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
+
+
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// ✅ Current user route (for session authentication)
+app.get("/counselors", async (req, res) => {
+  try {
+    let counsellors = await Counselor.find({});
+    res.json(counsellors);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching counsellors", error: error.message });
+  }
+});
+ // sending user data to the frontend
 app.get("/current_user", (req, res) => {
   if (req.isAuthenticated()) {
-    res.json({ user: req.user });
+    res.json({user:req.user});
   } else {
     res.status(401).json({ message: "Not authenticated" });
   }
 });
 
-// ✅ Route to get counselors
-app.get("/counselors", async (req, res) => {
+const moodRoutes = require('./routes/moodRoutes');
+app.use('/api/mood', moodRoutes);
+const sleepRoutes = require('./routes/sleepRoutes');
+app.use('/api/sleep', sleepRoutes);
+
+const quizRoutes = require('./routes/quizRoutes');
+app.use('/api/quiz', quizRoutes);
+
+const videoRoutes = require('./routes/videoRoutes');
+app.use('/videos', videoRoutes);
+app.use('/hub', videoRoutes);
+
+
+app.post("/appointments", async (req, res) => {
   try {
-    let counselors = await Counselor.find({});
-    res.json(counselors);
+    console.log(req.body);
+    const appointment = new Appointment(req.body);
+    await appointment.save();
+    res.status(201).json({ message: "Appointment booked successfully", appointment });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching counselors", error: error.message });
+    res.status(500).json({ message: "Error booking appointment", error: error.message });
   }
 });
+
+
 
 app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
 
-app.get("/login", (req, res) => {
-  res.render("login.ejs");
-});
-
-// ✅ Signup route
 app.post("/signup", async (req, res) => {
   try {
-    const { username, fullName, email, phone, password, avatar, university, yearOfStudy } = req.body;
-    const user = new User({ username, fullName, email, phone, avatar, university, yearOfStudy });
+    const {
+      username,
+      fullName,
+      email,
+      phone,
+      password,
+      avatar,
+      university,
+      yearOfStudy,
+    } = req.body;
+
+    const user = new User({
+      username,
+      fullName,
+      email,
+      phone,
+      avatar,
+      university,
+      yearOfStudy,
+    });
 
     const registeredUser = await User.register(user, password);
+
     req.login(registeredUser, (err) => {
       if (err) {
         console.error('Login after signup error:', err);
         return res.status(500).send("Error logging in after registration: " + err.message);
       }
       console.log('User registered and logged in:', req.user);
-      res.redirect("http://localhost:8080/dashboard"); // Redirect to dashboard
+      res.redirect("http://localhost:8080/dashboard");
     });
   } catch (error) {
     console.error('Signup error:', error);
@@ -160,7 +196,12 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// ✅ Login route
+
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+app.post('/addvolunteer', verifyToken, addVolunteer);
+
 app.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -179,12 +220,15 @@ app.post("/login", (req, res, next) => {
       }
 
       console.log("Login successful, user:", req.user);
-      res.redirect("http://localhost:8080/dashboard"); // Redirect to dashboard
+     res.redirect("http://localhost:8080/dashboard");
     });
   })(req, res, next);
 });
 
-// ✅ Logout route
+
+const volunteerRoutes = require('./routes/volunteer');
+app.use('/login/volunteer', volunteerRoutes);
+
 app.post("/logout", (req, res) => {
   req.logout((err) => {
     if (err) {
@@ -196,18 +240,28 @@ app.post("/logout", (req, res) => {
   });
 });
 
-// ✅ Appointment route
-app.post("/appointments", async (req, res) => {
-  try {
-    const appointment = new Appointment(req.body);
-    await appointment.save();
-    res.status(201).json({ message: "Appointment booked successfully", appointment });
-  } catch (error) {
-    res.status(500).json({ message: "Error booking appointment", error: error.message });
+const communityRoutes = require('./routes/community');
+app.use('/api/community', communityRoutes);
+
+
+app.get("/auth/status", (req, res) => {
+  console.log('Auth status check - current user:', req.user);
+  if (req.user) {
+    res.json({ 
+      authenticated: true, 
+      user: req.user,
+      currUser: req.user 
+    });
+  } else {
+    res.json({ 
+      authenticated: false, 
+      user: null,
+      currUser: null 
+    });
   }
 });
 
-// ✅ Socket.IO: Handle real-time messaging
+// SOCKET.IO starts 
 io.on('connection', (socket) => {
   console.log('New client connected');
 
@@ -241,13 +295,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// ✅ Define API routes
-const communityRoutes = require('./routes/community');
-app.use('/api/community', communityRoutes);
-const volunteerRoutes = require('./routes/volunteer');
-app.use('/login/volunteer', volunteerRoutes);
 
-// ✅ Server port setup
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
