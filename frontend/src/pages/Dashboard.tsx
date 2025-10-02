@@ -58,7 +58,7 @@ export default function Dashboard() {
 	const [user, setUser] = useState(null);
 	useEffect(() => {
 		axios
-			.get("http://localhost:3000/current_user", { withCredentials: true })
+			.get("https://sih-2025-arogyam-0cf2.onrender.com/current_user", { withCredentials: true })
 			.then((response) => {
 				console.log("Fetched user:", response.data.user);
 				setUser(response.data.user);
