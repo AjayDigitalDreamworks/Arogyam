@@ -69,7 +69,7 @@ export default function Mood({ userId }: MoodProps) {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE_URL}/current_user`, { withCredentials: true })
+      .get(`https://sih-2025-arogyam-0cf2.onrender.com/current_user`, { withCredentials: true })
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
@@ -97,7 +97,7 @@ export default function Mood({ userId }: MoodProps) {
       return;
     }
     try {
-      await axios.post(`${API_BASE_URL}/api/mood`, {
+      await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/api/mood`, {
         userId: user._id,
         mood: selectedMood,
         note: moodNote,

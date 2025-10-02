@@ -47,7 +47,7 @@ export default function Resources() {
 
         
 
-        const response = await axios.get(`${API_BASE_URL}/hub/`); // Replace with actual API URL
+        const response = await axios.get(`https://sih-2025-arogyam-0cf2.onrender.com/hub/`); // Replace with actual API URL
 
         const data = response.data;
 

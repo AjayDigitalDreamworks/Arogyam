@@ -38,7 +38,7 @@ export default function Sleep() {
   const { toast } = useToast();
   useEffect(() => {
     axios
-      .get(`${API_BASE_URL}/current_user`, { withCredentials: true })
+      .get(`https://sih-2025-arogyam-0cf2.onrender.com/current_user`, { withCredentials: true })
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
@@ -75,7 +75,7 @@ export default function Sleep() {
       return;
     }
     try {
-      await axios.post(`${API_BASE_URL}/api/sleep`, {
+      await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/api/sleep`, {
         userId,
         hours,
         quality: sleepQuality, // <-- add this

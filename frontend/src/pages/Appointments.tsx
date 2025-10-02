@@ -59,7 +59,7 @@ export default function Appointments() {
     };
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/appointments`, appointmentPayload);
+      const response = await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/appointments`, appointmentPayload);
       toast({
         title: "Appointment Booked!",
         description: "Your appointment has been scheduled. You'll receive a confirmation email shortly.",

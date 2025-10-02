@@ -119,7 +119,7 @@ export default function Quizzes() {
 
   useEffect(() => {
     axios
-      .get(`${API_BASE_URL}/current_user`, { withCredentials: true })
+      .get(`https://sih-2025-arogyam-0cf2.onrender.com/current_user`, { withCredentials: true })
       .then((response) => {
         setUser(response.data.user);
       })
@@ -130,7 +130,7 @@ export default function Quizzes() {
 
   const sendQuizScore = async (userId: string, score: number, quiz_type: string, date: Date = new Date()) => {
     try {
-      await axios.post(`${API_BASE_URL}/api/quiz`, {
+      await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/api/quiz`, {
         userId,
         score,
         quiz_type,
