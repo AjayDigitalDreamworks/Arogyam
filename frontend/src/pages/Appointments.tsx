@@ -8,12 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Calendar, Clock, User, Phone, Mail, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
-import API_BASE_URL from "@/config/api";
+import api from "@/config/api";
 
 export default function Appointments() {
   const [counselors, setCounselors] = useState([]);
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/counselors`)
+    api.get(`/counselors`)
       .then(response => {
         console.log('Fetched counselors:', response.data);
         setCounselors(response.data);
@@ -57,9 +57,10 @@ export default function Appointments() {
       phone: formData.phone,
       discussion: formData.concerns
     };
-
+    // console.log('Booking appointment with payload:', appointmentPayload);
     try {
-      const response = await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/appointments`, appointmentPayload);
+      const response = await api.post(`/appointments`, appointmentPayload);
+      console.log('Appointment booked successfully:', response.data);
       toast({
         title: "Appointment Booked!",
         description: "Your appointment has been scheduled. You'll receive a confirmation email shortly.",

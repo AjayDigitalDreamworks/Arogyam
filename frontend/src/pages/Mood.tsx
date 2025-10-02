@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
-import API_BASE_URL from "@/config/api";
+import api from "@/config/api";
 
 import { 
   Heart, 
@@ -68,11 +68,12 @@ export default function Mood({ userId }: MoodProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    axios
-      .get(`https://sih-2025-arogyam-0cf2.onrender.com/current_user`, { withCredentials: true })
+    api
+      .get(`/protected`)
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
+
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
@@ -88,7 +89,7 @@ export default function Mood({ userId }: MoodProps) {
       });
       return;
     }
-    if (!user?._id) {
+    if (!user?.userId) {
       toast({
         title: "User not found",
         description: "Please log in again.",
@@ -97,8 +98,8 @@ export default function Mood({ userId }: MoodProps) {
       return;
     }
     try {
-      await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/api/mood`, {
-        userId: user._id,
+      await api.post(`/api/mood`, {
+        userId: user.userId,
         mood: selectedMood,
         note: moodNote,
         date: selectedDate || new Date()

@@ -13,7 +13,7 @@ import { LatestResources } from "@/components/LatestResources";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Mood from "./Mood";
-import API_BASE_URL from "@/config/api";
+import api from "@/config/api";
 
 const wellnessData = [
 	{
@@ -56,17 +56,46 @@ const wellnessData = [
 
 export default function Dashboard() {
 	const [user, setUser] = useState(null);
-	useEffect(() => {
-		axios
-			.get("http://localhost:3000/current_user", { withCredentials: true })
-			.then((response) => {
-				console.log("Fetched user:", response.data.user);
-				setUser(response.data.user);
-			})
-			.catch((error) => {
-				console.error("Error fetching user:", error);
-			});
-	}, []);
+const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem("token");
+
+    // If no token, redirect to login or show an error
+    if (!token) {
+      setError("No token found, please log in again.");
+      window.location.href = "/login"; // Redirect to login page if token is missing
+      return;
+    }
+
+    console.log("Using token:", token);
+
+    // Make the API request to fetch the current user
+    api
+      .get("/protected", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+        },
+      })
+      .then((response) => {
+        console.log("Fetched user:", response.data.user);
+        setUser(response.data.user); // Set the user state on success
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error);
+
+        // Handle specific error types (like token expiry or invalid token)
+        if (error.response && error.response.status === 401) {
+          setError("Session expired. Please log in again.");
+          localStorage.removeItem("token"); // Remove expired token from localStorage
+          window.location.href = "/login"; // Redirect to login page
+        } else {
+          setError("Error fetching user. Please try again.");
+        }
+      });
+  }, []);
+
 	return (
 		<div className="min-h-screen bg-background">
 			<main className="container mx-auto px-6 py-8 max-w-7xl">

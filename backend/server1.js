@@ -53,7 +53,7 @@ const sessionOption = {
     httpOnly: true, 
     secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
     sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', 
-    domain: '.onrender.com',
+    // domain: '.onrender.com',
   },
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URL,
@@ -61,14 +61,6 @@ const sessionOption = {
   }),
 };
 
-
-
-// app.use(cors({
-//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
-//   credentials: true, // Allow cookies to be sent
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
 
 
 app.use(cors({
@@ -96,28 +88,59 @@ app.use(cors({
 
 
 
+// const sessionOption = {
+//   secret: process.env.SESSION_SECRET || "yadavji06",
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+//     httpOnly: true,  // Make sure JavaScript can't access the cookie
+//     secure: process.env.NODE_ENV === 'production', // Secure cookies only in production
+//     sameSite: 'None', // Necessary for cross-origin cookies
+//     domain: '.onrender.com', // Cookie shared between backend and frontend subdomains
+//   },
+//   store: MongoStore.create({
+//     mongoUrl: process.env.MONGO_URL,
+//     collectionName: 'sessions',
+//   }),
+// };
+
+
+// app.use(cors({
+//   origin: (origin, callback) => {
+//     const allowedOrigins = [
+//       process.env.FRONTEND_URL ,
+//        "https://sih-2025-arogyam.onrender.com",
+//       "http://localhost:8080", 
+//       "https://sih-2025-arogyam-0cf2.onrender.com",
+//     ];
+
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true,  // Allow cookies to be sent with requests
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//   allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+
+
 
 // app.options('*', cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
+
+// ✅ Initialize session and Passport.js
 app.use(session(sessionOption));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  console.log('Session Data:', req.session);  // Log session data
-  next();
-});
-
-app.use((req, res, next) => {
-  res.locals.currUser = req.user;
-  console.log('Current user in session:', req.user);
-  next();
-});
-
-
+// ✅ Passport authentication setup
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -225,6 +248,35 @@ app.get("/login", (req, res) => {
 });
 app.post('/addvolunteer', verifyToken, addVolunteer);
 
+// app.post("/login", (req, res, next) => {
+//   passport.authenticate("local", (err, user, info) => {
+//     if (err) {
+//       console.error("Authentication error:", err);
+//       return res.status(500).json({ message: "Authentication error", error: err.message });
+//     }
+//     if (!user) {
+//       console.log("Login failed: Invalid credentials");
+//       return res.status(401).json({ message: "Invalid credentials" });
+//     }
+
+//     req.login(user, (err) => {
+//       if (err) {
+//         console.error("Login error:", err);
+//         return res.status(500).json({ message: "Login error", error: err.message });
+//       }
+
+//       console.log("Login successful, user:", req.user);
+
+//       // Ensure the session is saved before redirect
+//       req.session.save(() => {
+//         res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
+//       });
+//     });
+//   })(req, res, next);
+// });
+
+
+
 app.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -242,11 +294,26 @@ app.post("/login", (req, res, next) => {
         return res.status(500).json({ message: "Login error", error: err.message });
       }
 
-      console.log("Login successful, user:", req.user);
-     res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
+      // Manually set the session cookie
+      const sessionId = req.sessionID; // Session ID from Express session
+      const cookieOptions = {
+        maxAge: 1000 * 60 * 60 * 24 * 7, 
+        httpOnly: true, 
+        secure: process.env.NODE_ENV === 'production', // secure cookies for HTTPS
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',         
+      };
+
+      // Set the cookie manually
+      res.cookie('connect.sid', sessionId, cookieOptions);
+
+      console.log("Login successful, session data:", req.session);
+
+      // Now redirect to the dashboard
+      res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
     });
   })(req, res, next);
 });
+
 
 
 const volunteerRoutes = require('./routes/volunteer');

@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import API_BASE_URL from "@/config/api";
+import api from "@/config/api";
 
 export default function Sleep() {
   const [sleepHours, setSleepHours] = useState(7.5);
@@ -37,12 +37,11 @@ export default function Sleep() {
   const [userId, setUserId] = useState(null);
   const { toast } = useToast();
   useEffect(() => {
-    axios
-      .get(`https://sih-2025-arogyam-0cf2.onrender.com/current_user`, { withCredentials: true })
+    api.get(`/protected`)
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
-        setUserId(response.data.user._id); // Assuming the user ID is available here
+        setUserId(response.data.user.userId); // Assuming the user ID is available here
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
@@ -75,7 +74,7 @@ export default function Sleep() {
       return;
     }
     try {
-      await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/api/sleep`, {
+      await api.post(`/api/sleep`, {
         userId,
         hours,
         quality: sleepQuality, // <-- add this

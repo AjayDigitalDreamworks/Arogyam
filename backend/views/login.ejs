@@ -4,51 +4,167 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: #ffffff;
+            padding: 40px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #3182ce;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            background-color: #3182ce;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2563eb;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .footer a {
+            color: #3182ce;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <form action="/login" method="POST">
-  <div>
-    <label for="username">Username *</label>
-    <input type="text" id="username" name="username" required />
-  </div>
-  <!-- <div>
-    <label for="fullName">Full Name *</label>
-    <input type="text" id="fullName" name="fullName" required />
-  </div> -->
-  <!-- <div>
-    <label for="email">Email *</label>
-    <input type="email" id="email" name="email" required />
-  </div> -->
-  <!-- <div>
-    <label for="phone">Phone</label>
-    <input type="text" id="phone" name="phone" />
-  </div> -->
-  <div>
-    <label for="password">Password *</label>
-    <input type="password" id="password" name="password" required />
-  </div>
-  <!-- <div>
-    <label for="avatar">Avatar (emoji)</label>
-    <input type="text" id="avatar" name="avatar" value="🎓" />
-  </div> -->
-  <!-- <div>
-    <label for="university">University</label>
-    <input type="text" id="university" name="university" />
-  </div>
-  <div>
-    <label for="yearOfStudy">Year of Study</label>
-    <select id="yearOfStudy" name="yearOfStudy">
-      <option value="">Select</option>
-      <option value="Freshman">Freshman</option>
-      <option value="Sophomore">Sophomore</option>
-      <option value="Junior">Junior</option>
-      <option value="Senior">Senior</option>
-      <option value="Graduate">Graduate</option>
-      <option value="Other">Other</option>
-    </select>
-  </div> -->
-  <button type="submit">Login</button>
-</form>
+
+    <div class="login-container">
+        <h1>Login</h1>
+
+        <!-- Error Message -->
+        <div id="error-message" style="display: none;"></div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password" />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Footer with Sign Up link -->
+        <div class="footer">
+            <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Handle the login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Make sure the fields are not empty
+            if (!email || !password) {
+                alert("Please fill in both email and password.");
+                return;
+            }
+
+            try {
+                // Send POST request to the server with email and password
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.token) {
+                    const token = result.token;
+                    console.log("Login successful, token:", token);
+                    localStorage.setItem('token', token);
+                    window.location.href = "http://localhost:8080/dashboard"; // Redirect to dashboard
+                } else {
+                    document.getElementById('error-message').textContent = result.message || "Something went wrong.";
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error logging in:", error);
+                alert("An error occurred. Please try again later.");
+            }
+        });
+    </script>
 
 </body>
 </html>

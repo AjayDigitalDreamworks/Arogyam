@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Brain, GamepadIcon, Trophy, Clock, Play, CheckCircle, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
-import API_BASE_URL from "@/config/api";
+import api from "@/config/api";
 
 const quizzes = [
   {
@@ -118,8 +118,8 @@ export default function Quizzes() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`https://sih-2025-arogyam-0cf2.onrender.com/current_user`, { withCredentials: true })
+    api
+      .get(`/protected`)
       .then((response) => {
         setUser(response.data.user);
       })
@@ -130,12 +130,12 @@ export default function Quizzes() {
 
   const sendQuizScore = async (userId: string, score: number, quiz_type: string, date: Date = new Date()) => {
     try {
-      await axios.post(`https://sih-2025-arogyam-0cf2.onrender.com/api/quiz`, {
+      await api.post(`/api/quiz`, {
         userId,
         score,
         quiz_type,
         date
-      }, { withCredentials: true });
+      });
       console.log("Quiz score submitted!");
     } catch (error) {
       console.error("Error submitting quiz score:", error);
@@ -162,7 +162,7 @@ export default function Quizzes() {
     if (currentQuestion + 1 >= activeQuiz.questions) {
       const totalScore = newAnswers.reduce((sum, score) => sum + score, 0);
       const quizType = activeQuiz.id === "phq9" ? "depression" : "anxiety";
-      if (user) sendQuizScore(user._id, totalScore, quizType);
+      if (user) sendQuizScore(user.userId, totalScore, quizType);
 
       toast({ title: "Assessment Completed!", description: `Total score: ${totalScore}. View your results and recommendations.` });
       setActiveQuiz(null);
