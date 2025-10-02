@@ -56,7 +56,7 @@ const sessionOption = {
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     httpOnly: true,
-    secure: false, // Ensure this is true in production (HTTPS)
+    secure: true, // Ensure this is true in production (HTTPS)
     sameSite: 'None', // Important for cross-origin cookies
   },
 };
