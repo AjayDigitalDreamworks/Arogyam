@@ -61,7 +61,7 @@ mongoose
   .catch((err) => console.log(err));
 
 const sessionOption = {
-  secret: process.env.SESSION_SECRET || "mysupersecretcode",
+  secret: process.env.SESSION_SECRET || "yadavji06",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -221,28 +221,28 @@ app.get("/login", (req, res) => {
 });
 app.post('/addvolunteer', verifyToken, addVolunteer);
 
-app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      console.error("Authentication error:", err);
-      return res.status(500).json({ message: "Authentication error", error: err.message });
-    }
-    if (!user) {
-      console.log("Login failed: Invalid credentials");
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
+// app.post("/login", (req, res, next) => {
+//   passport.authenticate("local", (err, user, info) => {
+//     if (err) {
+//       console.error("Authentication error:", err);
+//       return res.status(500).json({ message: "Authentication error", error: err.message });
+//     }
+//     if (!user) {
+//       console.log("Login failed: Invalid credentials");
+//       return res.status(401).json({ message: "Invalid credentials" });
+//     }
 
-    req.login(user, (err) => {
-      if (err) {
-        console.error("Login error:", err);
-        return res.status(500).json({ message: "Login error", error: err.message });
-      }
+//     req.login(user, (err) => {
+//       if (err) {
+//         console.error("Login error:", err);
+//         return res.status(500).json({ message: "Login error", error: err.message });
+//       }
 
-      console.log("Login successful, user:", req.user);
-     res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
-    });
-  })(req, res, next);
-});
+//       console.log("Login successful, user:", req.user);
+//      res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
+//     });
+//   })(req, res, next);
+// });
 
 
 const volunteerRoutes = require('./routes/volunteer');
