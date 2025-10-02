@@ -92,6 +92,14 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
+
+// ✅ Logging current session user
+app.use((req, res, next) => {
+  res.locals.currUser = req.user;
+  console.log('Current user in session:', req.user);
+  next();
+});
+
 // ✅ Default route for testing
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -114,6 +122,15 @@ app.get("/counselors", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error fetching counselors", error: error.message });
   }
+});
+
+
+app.get("/signup", (req, res) => {
+  res.render("signup.ejs");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
 });
 
 // ✅ Signup route
