@@ -58,7 +58,7 @@ export default function Dashboard() {
 	const [user, setUser] = useState(null);
 	useEffect(() => {
 		axios
-			.get(`${API_BASE_URL}/current_user`, { withCredentials: true })
+			.get("http://localhost:3000/current_user", { withCredentials: true })
 			.then((response) => {
 				console.log("Fetched user:", response.data.user);
 				setUser(response.data.user);

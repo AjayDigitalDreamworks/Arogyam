@@ -17,17 +17,14 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-// ✅ Allowed frontend origins
 const allowedOrigins = [
-  process.env.FRONTEND_URL || "https://sih-2025-arogyam.onrender.com",
-  process.env.LOCAL_URL || "http://localhost:8080",
-  "https://sih-2025-arogyam-0cf2.onrender.com",
-  "http://localhost:3000"
+  "https://sih-2025-arogyam.onrender.com",
+  "http://localhost:8080",
 ];
 
 const io = new Server(server, {
   cors: {
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -38,22 +35,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
-
-// ✅ Apply CORS to Express
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
 const url = process.env.MONGO_URL;
 mongoose
   .connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -61,7 +42,7 @@ mongoose
   .catch((err) => console.log(err));
 
 const sessionOption = {
-  secret: process.env.SESSION_SECRET || "yadavji06",
+  secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -73,12 +54,12 @@ const sessionOption = {
 };
 
 
-// app.use(cors({
-//   origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
-//   credentials: true, // Allow cookies to be sent
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//   allowedHeaders: ['Content-Type', 'Authorization']
-// }));
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:8080", // Updated to match frontend port
+  credentials: true, // Allow cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 
 
@@ -221,28 +202,28 @@ app.get("/login", (req, res) => {
 });
 app.post('/addvolunteer', verifyToken, addVolunteer);
 
-// app.post("/login", (req, res, next) => {
-//   passport.authenticate("local", (err, user, info) => {
-//     if (err) {
-//       console.error("Authentication error:", err);
-//       return res.status(500).json({ message: "Authentication error", error: err.message });
-//     }
-//     if (!user) {
-//       console.log("Login failed: Invalid credentials");
-//       return res.status(401).json({ message: "Invalid credentials" });
-//     }
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Authentication error:", err);
+      return res.status(500).json({ message: "Authentication error", error: err.message });
+    }
+    if (!user) {
+      console.log("Login failed: Invalid credentials");
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-//     req.login(user, (err) => {
-//       if (err) {
-//         console.error("Login error:", err);
-//         return res.status(500).json({ message: "Login error", error: err.message });
-//       }
+    req.login(user, (err) => {
+      if (err) {
+        console.error("Login error:", err);
+        return res.status(500).json({ message: "Login error", error: err.message });
+      }
 
-//       console.log("Login successful, user:", req.user);
-//      res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
-//     });
-//   })(req, res, next);
-// });
+      console.log("Login successful, user:", req.user);
+     res.redirect("https://sih-2025-arogyam.onrender.com/dashboard");
+    });
+  })(req, res, next);
+});
 
 
 const volunteerRoutes = require('./routes/volunteer');
