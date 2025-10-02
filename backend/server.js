@@ -146,7 +146,7 @@ app.post("/signup", async (req, res) => {
         return res.status(500).send("Error logging in after registration: " + err.message);
       }
       console.log('User registered and logged in:', req.user);
-      res.redirect("https://sih-2025-arogyam.onrender.com/dashboard"); // Redirect to dashboard
+      res.redirect("http://localhost:8080/dashboard"); // Redirect to dashboard
     });
   } catch (error) {
     console.error('Signup error:', error);
@@ -173,7 +173,7 @@ app.post("/login", (req, res, next) => {
       }
 
       console.log("Login successful, user:", req.user);
-      res.redirect("https://sih-2025-arogyam.onrender.com/dashboard"); // Redirect to dashboard
+      res.redirect("http://localhost:8080/dashboard"); // Redirect to dashboard
     });
   })(req, res, next);
 });
