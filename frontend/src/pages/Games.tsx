@@ -2,17 +2,13 @@ import React from 'react';
 
 const IframeComponent = () => {
   return (
-   
-<iframe
-  src="https://www.crazygames.com/game/stickman-escape-school"
-  width="960"
-  height="640"
-  title="Stickman Escape School"
-  frameborder="0"
-  scrolling="no"
-  allowfullscreen
-  sandbox="allow-scripts allow-same-origin allow-forms"
-></iframe>
+    <iframe
+      src="https://skribbl.io/"
+      width="100%"
+      height="650px"
+      style={{ border: 'none' }}
+      title="Skribbl.io Game"
+    />
   );
 };
 
