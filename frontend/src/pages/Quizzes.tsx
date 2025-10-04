@@ -4,9 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, GamepadIcon, Trophy, Clock, Play, CheckCircle, AlertCircle } from "lucide-react";
+import { Brain, GamepadIcon, Trophy, Clock, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import axios from "axios";
 import api from "@/config/api";
 
 const quizzes = [
@@ -99,6 +98,42 @@ const games = [
     color: "bg-red-500",
     highScore: null,
   },
+  {
+    id: "skribbl",
+    title: "Skribbl.io",
+    description: "Multiplayer drawing and guessing game.",
+    duration: "Unlimited",
+    type: "Online Game",
+    icon: "✏️",
+    color: "bg-indigo-500",
+    highScore: null,
+    iframe: true,
+    iframeSrc: "https://skribbl.io/",
+  },
+  {
+    id: "stickman",
+    title: "Stickman Escape School",
+    description: "Help Stickman escape from school in this fun puzzle game.",
+    duration: "Unlimited",
+    type: "Online Game",
+    icon: "🏫",
+    color: "bg-purple-500",
+    highScore: null,
+    iframe: true,
+    iframeSrc: "https://www.onlinegames.io/red-light-green-light/",
+  },
+   {
+    id: "granny",
+    title: "granny",
+    description: "Help granny escape .",
+    duration: "Unlimited",
+    type: "Online Game",
+    icon: "🏫",
+    color: "bg-purple-500",
+    highScore: null,
+    iframe: true,
+    iframeSrc: "https://www.onlinegames.io/granny/",
+  },
 ];
 
 const questionOptions = [
@@ -116,6 +151,7 @@ export default function Quizzes() {
   const [quizProgress, setQuizProgress] = useState(0);
   const { toast } = useToast();
   const [user, setUser] = useState(null);
+  const [popupGame, setPopupGame] = useState<any>(null);
 
   useEffect(() => {
     api
@@ -134,7 +170,7 @@ export default function Quizzes() {
         userId,
         score,
         quiz_type,
-        date
+        date,
       });
       console.log("Quiz score submitted!");
     } catch (error) {
@@ -152,7 +188,11 @@ export default function Quizzes() {
 
   const nextQuestion = () => {
     if (selectedAnswer === "") {
-      toast({ title: "Please select an answer", description: "Choose an option before proceeding.", variant: "destructive" });
+      toast({
+        title: "Please select an answer",
+        description: "Choose an option before proceeding.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -164,7 +204,10 @@ export default function Quizzes() {
       const quizType = activeQuiz.id === "phq9" ? "depression" : "anxiety";
       if (user) sendQuizScore(user.userId, totalScore, quizType);
 
-      toast({ title: "Assessment Completed!", description: `Total score: ${totalScore}. View your results and recommendations.` });
+      toast({
+        title: "Assessment Completed!",
+        description: `Total score: ${totalScore}. View your results and recommendations.`,
+      });
       setActiveQuiz(null);
     } else {
       setCurrentQuestion(currentQuestion + 1);
@@ -184,7 +227,10 @@ export default function Quizzes() {
   };
 
   const startGame = (game: any) => {
-    toast({ title: `Starting ${game.title}`, description: "Game is loading... Have fun!" });
+    toast({
+      title: `Starting ${game.title}`,
+      description: "Game is loading... Have fun!",
+    });
   };
 
   if (activeQuiz) {
@@ -194,11 +240,15 @@ export default function Quizzes() {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-2xl font-bold">{activeQuiz.title}</h1>
-            <Button variant="outline" onClick={() => setActiveQuiz(null)}>Exit Assessment</Button>
+            <Button variant="outline" onClick={() => setActiveQuiz(null)}>
+              Exit Assessment
+            </Button>
           </div>
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Question {currentQuestion + 1} of {activeQuiz.questions}</span>
+              <span>
+                Question {currentQuestion + 1} of {activeQuiz.questions}
+              </span>
               <span>{Math.round(quizProgress)}% Complete</span>
             </div>
             <Progress value={quizProgress} className="h-2" />
@@ -211,11 +261,21 @@ export default function Quizzes() {
             </p>
           </div>
 
-          <h2 className="text-xl font-semibold mb-6">{currentQuestion + 1}. {currentQuestionText}</h2>
+          <h2 className="text-xl font-semibold mb-6">
+            {currentQuestion + 1}. {currentQuestionText}
+          </h2>
 
           <div className="space-y-3 mb-8">
             {questionOptions.map((option, index) => (
-              <button key={index} onClick={() => setSelectedAnswer(index.toString())} className={`w-full p-4 text-left rounded-lg border-2 transition-all ${selectedAnswer === index.toString() ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}`}>
+              <button
+                key={index}
+                onClick={() => setSelectedAnswer(index.toString())}
+                className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
+                  selectedAnswer === index.toString()
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
                 <div className="flex items-center justify-between">
                   <span>{option}</span>
                   <span className="text-sm text-muted-foreground">{index}</span>
@@ -225,9 +285,17 @@ export default function Quizzes() {
           </div>
 
           <div className="flex justify-between">
-            <Button variant="outline" onClick={previousQuestion} disabled={currentQuestion === 0}>Previous</Button>
+            <Button
+              variant="outline"
+              onClick={previousQuestion}
+              disabled={currentQuestion === 0}
+            >
+              Previous
+            </Button>
             <Button onClick={nextQuestion}>
-              {currentQuestion + 1 >= activeQuiz.questions ? "Complete Assessment" : "Next Question"}
+              {currentQuestion + 1 >= activeQuiz.questions
+                ? "Complete Assessment"
+                : "Next Question"}
             </Button>
           </div>
         </Card>
@@ -239,7 +307,9 @@ export default function Quizzes() {
     <div className="container mx-auto px-6 py-8 max-w-7xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Quizzes & Games</h1>
-        <p className="text-muted-foreground">Fun self-assessments and stress relief activities to support your mental wellness journey</p>
+        <p className="text-muted-foreground">
+          Fun self-assessments and stress relief activities to support your mental wellness journey
+        </p>
       </div>
       <Tabs defaultValue="quizzes" className="space-y-6">
         <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:grid-cols-2">
@@ -255,19 +325,28 @@ export default function Quizzes() {
         <TabsContent value="quizzes" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {quizzes.map((quiz) => (
-              <Card key={quiz.id} className="wellness-card p-6 hover:shadow-lg transition-all">
+              <Card
+                key={quiz.id}
+                className="wellness-card p-6 hover:shadow-lg transition-all"
+              >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-12 h-12 rounded-full ${quiz.color} flex items-center justify-center text-2xl`}>
+                  <div
+                    className={`w-12 h-12 rounded-full ${quiz.color} flex items-center justify-center text-2xl`}
+                  >
                     {quiz.icon}
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">{quiz.category}</Badge>
+                      <Badge variant="secondary" className="text-xs">
+                        {quiz.category}
+                      </Badge>
                     </div>
                   </div>
                 </div>
                 <h3 className="font-semibold mb-2">{quiz.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{quiz.description}</p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {quiz.description}
+                </p>
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Clock className="w-3 h-3" /> {quiz.duration}
@@ -284,7 +363,119 @@ export default function Quizzes() {
           </div>
         </TabsContent>
         <TabsContent value="games" className="space-y-6">
-          {/* Render games here */}
+          {/* Game Popup Modal */}
+          {popupGame && popupGame.iframe && (
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                background: "rgba(0,0,0,0.7)",
+                zIndex: 1000,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onClick={() => setPopupGame(null)}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  background: "#fff",
+                  borderRadius: "16px",
+                  boxShadow: "0 4px 32px rgba(0,0,0,0.2)",
+                  padding: "1rem",
+                  maxWidth: "1000px",
+                  width: "90vw",
+                  maxHeight: "90vh",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  overflow: "auto",
+                }}
+                onClick={e => e.stopPropagation()}
+              >
+                <button
+                  style={{
+                    position: "absolute",
+                    top: 8,
+                    right: 12,
+                    background: "#eee",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: 32,
+                    height: 32,
+                    fontSize: 20,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setPopupGame(null)}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+                <h2 style={{ marginBottom: "1rem" }}>{popupGame.title}</h2>
+                <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                  <iframe
+                    src={popupGame.iframeSrc}
+                    width="900"
+                    height="600"
+                    style={{ border: "none", borderRadius: "8px", maxWidth: "100%" }}
+                    scrolling="auto"
+                    allowFullScreen
+                    sandbox="allow-scripts allow-same-origin allow-forms"
+                    title={popupGame.title}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {games.map((game) => (
+              <Card
+                key={game.id}
+                className="wellness-card p-6 hover:shadow-lg transition-all cursor-pointer"
+                onClick={() => game.iframe ? setPopupGame(game) : startGame(game)}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className={`w-12 h-12 rounded-full ${game.color} flex items-center justify-center text-2xl`}
+                  >
+                    {game.icon}
+                  </div>
+                  <div className="flex-1">
+                    <Badge variant="secondary" className="text-xs">
+                      {game.type}
+                    </Badge>
+                  </div>
+                </div>
+                <h3 className="font-semibold mb-2">{game.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {game.description}
+                </p>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Clock className="w-3 h-3" />
+                    {game.duration}
+                  </div>
+                  {game.highScore && (
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Trophy className="w-3 h-3" />
+                      High Score: {game.highScore}
+                    </div>
+                  )}
+                </div>
+                {/* No inline iframe, only modal popup */}
+                {!game.iframe && (
+                  <Button onClick={e => { e.stopPropagation(); startGame(game); }} className="w-full">
+                    <GamepadIcon className="w-4 h-4 mr-2" />
+                    Play Game
+                  </Button>
+                )}
+              </Card>
+            ))}
+          </div>
         </TabsContent>
       </Tabs>
     </div>
