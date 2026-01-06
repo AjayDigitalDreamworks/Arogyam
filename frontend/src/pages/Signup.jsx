@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const SignUpForm = () => {
     const [formData, setFormData] = useState({
@@ -31,27 +32,40 @@ const SignUpForm = () => {
             return;
         }
 
-        try {
-            const response = await fetch('https://sih-2025-arogyam-0cf2.onrender.com/api/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+      
+        console.log('Submitting signup form with data:', formData)
 
-            const result = await response.json();
-
-            if (response.ok) {
-                alert(result.message || 'Signup successful!');
-                window.location.href = '/login'; // Redirect to login page after successful sign-up
-            } else {
-                setErrorMessage(result.message || 'Something went wrong.');
-            }
-        } catch (error) {
-            console.error('Error during sign-up:', error);
-            alert('An error occurred. Please try again later.');
+try {
+    const response = await axios.post(
+        'http://localhost:3000/api/auth/signup',
+        formData,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            },
         }
+    );
+
+    console.log('Signup response:', response)
+
+    // Axios automatically parses JSON
+    const result = response.data;
+
+    alert(result.message || 'Signup successful!');
+    window.location.href = '/login'; // Redirect after successful sign-up
+
+} catch (error) {
+    console.error('Error during sign-up:', error);
+
+    if (error.response) {
+        // Server responded with a status outside 2xx
+        setErrorMessage(error.response.data?.message || 'Something went wrong.');
+    } else {
+        // Network / other error
+        alert('An error occurred. Please try again later.');
+    }
+}
+
     };
 
     return (
