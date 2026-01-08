@@ -24,23 +24,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser()); // Parse cookies on incoming requests
 
 
-
-const moodRoutes = require('./routes/moodRoutes');
-app.use('/api/mood', moodRoutes);
-const sleepRoutes = require('./routes/sleepRoutes');
-app.use('/api/sleep', sleepRoutes);
-
-const quizRoutes = require('./routes/quizRoutes');
-app.use('/api/quiz', quizRoutes);
-
-app.use('/videos', videoRoutes);
-app.use('/hub', videoRoutes);
-// Expose user list for counsellor dashboard (public for dev)
-app.use('/users', userRoutes);
-
-// Counsellor auth routes
-app.use('/api/counsellor', counsellorAuth);
-
 const corsOptions = {
   origin: [
     "http://localhost:8080", // Frontend ka URL (development mein)
@@ -85,6 +68,26 @@ app.get('/current_user', verifyToken, async (req, res) => {
     res.status(500).json({ message: 'Error fetching user', error: err.message });
   }
 });
+
+
+
+
+const moodRoutes = require('./routes/moodRoutes');
+app.use('/api/mood', moodRoutes);
+const sleepRoutes = require('./routes/sleepRoutes');
+app.use('/api/sleep', sleepRoutes);
+
+const quizRoutes = require('./routes/quizRoutes');
+app.use('/api/quiz', quizRoutes);
+
+app.use('/videos', videoRoutes);
+app.use('/hub', videoRoutes);
+// Expose user list for counsellor dashboard (public for dev)
+app.use('/users', userRoutes);
+
+// Counsellor auth routes
+app.use('/api/counsellor', counsellorAuth);
+
 
 
 // Example of appointment routes (create + query + counsellor responses)

@@ -1,30 +1,21 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Moon, Clock, TrendingUp, Calendar, Star, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import axios from "axios";
-import { useToast } from "@/hooks/use-toast";
 import api from "@/config/api";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Sleep() {
-  const [sleepHours, setSleepHours] = useState(7.5);
-  const [sleepQuality, setSleepQuality] = useState(4);
+  const [sleepHistory, setSleepHistory] = useState([]);
   const [showLogModal, setShowLogModal] = useState(false);
   const [logHours, setLogHours] = useState("");
   const [logQuality, setLogQuality] = useState(3);
-
-  const sleepData = [
-    { date: "Mon", hours: 8, quality: 5 },
-    { date: "Tue", hours: 7, quality: 3 },
-    { date: "Wed", hours: 6.5, quality: 3 },
-    { date: "Thu", hours: 8.5, quality: 5 },
-    { date: "Fri", hours: 6, quality: 2 },
-    { date: "Sat", hours: 9, quality: 5 },
-    { date: "Sun", hours: 7.5, quality: 4 },
-  ];
+  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const { toast } = useToast();
 
   const sleepTips = [
     "Maintain a consistent sleep schedule",
@@ -33,38 +24,48 @@ export default function Sleep() {
     "Avoid screens 1 hour before bed",
     "Limit caffeine after 2 PM"
   ];
-  const [user, setUser] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const { toast } = useToast();
+
+  // Fetch user info
   useEffect(() => {
     api.get(`/protected`)
       .then((response) => {
-        console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
-        setUserId(response.data.user.userId); // Assuming the user ID is available here
+        setUserId(response.data.user.userId);
       })
-      .catch((error) => {
-        console.error("Error fetching user:", error);
-      });
+      .catch((err) => console.error("Error fetching user:", err));
   }, []);
 
- const handleLogSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const hours = Number(logHours);
+  // Fetch sleep history
+  const fetchSleep = useCallback(async () => {
+    if (!userId) return;
+    try {
+      const res = await api.get(`/api/sleep/${userId}`);
+      setSleepHistory(res.data);
+    } catch (err) {
+      console.error("Failed to fetch sleep data", err);
+    }
+  }, [userId]);
 
-  setSleepHours(hours);
-  setSleepQuality(logQuality);
+  useEffect(() => {
+    fetchSleep();
+  }, [userId, fetchSleep]);
 
-  // Call backend submit function
-  await handleSleepSubmit(hours, new Date());
+  // Helper function
+  const formatDay = (date) => new Date(date).toLocaleDateString("en-US", { weekday: "short" });
 
-  setShowLogModal(false);
-  setLogHours("");
-  setLogQuality(3);
-};
+  const lastSleep = sleepHistory[sleepHistory.length - 1];
+  const weeklyAvgNum =
+    sleepHistory.length === 0
+      ? 0
+      : sleepHistory.reduce((acc, s) => acc + s.hours, 0) /
+          sleepHistory.length;
+  const weeklyAvg = weeklyAvgNum.toFixed(1);
 
+  // Submit log
+  const handleLogSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const hours = Number(logHours);
 
-  const handleSleepSubmit = async (hours: number, sleepDate: Date) => {
     if (!userId) {
       toast({
         title: "User not found",
@@ -73,23 +74,29 @@ export default function Sleep() {
       });
       return;
     }
+
     try {
       await api.post(`/api/sleep`, {
         userId,
         hours,
-        quality: sleepQuality, // <-- add this
-        date: sleepDate || new Date()
+        quality: logQuality,
+        date: new Date(),
       });
       toast({
         title: "Sleep Recorded!",
-        description: "Your sleep data has been saved to your wellness journey.",
+        description: "Your sleep data has been saved.",
       });
-    } catch (error) {
+      setShowLogModal(false);
+      setLogHours("");
+      setLogQuality(3);
+      fetchSleep(); // Refresh data
+    } catch (err) {
       toast({
         title: "Error",
         description: "Could not save your sleep data. Please try again.",
         variant: "destructive",
       });
+      console.error(err);
     }
   };
 
@@ -118,16 +125,20 @@ export default function Sleep() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-1">{sleepHours}h</div>
+                <div className="text-3xl font-bold text-primary mb-1">
+                  {lastSleep ? `${lastSleep.hours}h` : "--"}
+                </div>
                 <div className="text-sm text-muted-foreground">Duration</div>
               </div>
               <div className="text-center">
                 <div className="flex justify-center mb-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1,2,3,4,5].map(star => (
                     <Star
                       key={star}
                       className={`w-5 h-5 ${
-                        star <= sleepQuality ? "text-wellness-yellow fill-current" : "text-muted"
+                        star <= (lastSleep?.quality || 0)
+                          ? "text-wellness-yellow fill-current"
+                          : "text-muted"
                       }`}
                     />
                   ))}
@@ -136,9 +147,11 @@ export default function Sleep() {
               </div>
               <div className="text-center">
                 <Badge variant="secondary" className="text-sm">
-                  Good Sleep
+                  {lastSleep ? "Good Sleep" : "No Data"}
                 </Badge>
-                <div className="text-xs text-muted-foreground mt-1">Based on duration & quality</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Based on duration & quality
+                </div>
               </div>
             </div>
           </CardContent>
@@ -155,10 +168,10 @@ export default function Sleep() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {sleepData.map((day) => (
-                  <div key={day.date} className="flex items-center justify-between">
+                {sleepHistory.slice(-7).map((day, index) => (
+                  <div key={index} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 text-sm font-medium">{day.date}</div>
+                      <div className="w-12 text-sm font-medium">{formatDay(day.date)}</div>
                       <div className="flex-1">
                         <Progress value={(day.hours / 10) * 100} className="h-2" />
                       </div>
@@ -166,7 +179,7 @@ export default function Sleep() {
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{day.hours}h</span>
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
+                        {[1,2,3,4,5].map(star => (
                           <Star
                             key={star}
                             className={`w-3 h-3 ${
@@ -217,11 +230,13 @@ export default function Sleep() {
                 <div className="text-sm text-muted-foreground">Recommended</div>
               </div>
               <div className="text-center p-4 rounded-lg bg-primary/10">
-                <div className="text-2xl font-bold text-primary mb-1">7.2h</div>
+                <div className="text-2xl font-bold text-primary mb-1">{weeklyAvg}h</div>
                 <div className="text-sm text-muted-foreground">Weekly Average</div>
               </div>
               <div className="text-center p-4 rounded-lg bg-wellness-orange/10">
-                <div className="text-2xl font-bold text-wellness-orange mb-1">85%</div>
+                <div className="text-2xl font-bold text-wellness-orange mb-1">
+                  {sleepHistory.length ? `${((weeklyAvgNum / 8) * 100).toFixed(0)}%` : "0%"}
+                </div>
                 <div className="text-sm text-muted-foreground">Goal Progress</div>
               </div>
             </div>
