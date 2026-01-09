@@ -49,7 +49,7 @@ const Landing = () => {
 
             {/* Admin dashboard access (no auth required initially) */}
             <Button variant="outline" className="text-muted-foreground hover:text-primary">
-              <a href="/admin">Admin</a>
+              <a href="/admin/login">Admin</a>
             </Button>
 
         

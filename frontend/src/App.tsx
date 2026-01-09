@@ -41,6 +41,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegisterCounsellor from "./pages/AdminRegisterCounsellor";
 import AdminResources from "./pages/AdminResources";
 import AdminEmergency from "./pages/AdminEmergency";
+import AdminLogin from "./pages/adminLogin";
+import AdminSignup from "./pages/adminSignup"
 
 
 const queryClient = new QueryClient();
@@ -97,6 +99,8 @@ const App = () => (
             <Route path="/admin/register-counsellor" element={<Layout><AdminRegisterCounsellor /></Layout>} />
             <Route path="/admin/resources" element={<Layout><AdminResources /></Layout>} />
             <Route path="/admin/emergency" element={<Layout><AdminEmergency /></Layout>} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/signup" element={<AdminSignup />} />
 
             {/* Catch-all for unmatched routes */}
             <Route path="*" element={<NotFound />} />
