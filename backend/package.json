@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +15,7 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
     "body-parser": "^2.2.0",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.8.0",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -28,8 +29,8 @@
     "mongoose": "^8.18.0",
     "mongose": "^0.0.2-security",
     "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0",
-    "nodemon": "^3.1.10",
+    "multer-storage-cloudinary": "^2.2.1",
+    "nodemon": "^3.1.11",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",

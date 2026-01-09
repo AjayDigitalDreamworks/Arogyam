@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import api from "@/config/api";
+import { useNavigate } from "react-router-dom";
+
 
 export default function StudentProgress() {
+
+  const navigate = useNavigate();
+
   const [students, setStudents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -47,20 +52,28 @@ export default function StudentProgress() {
           <div className="p-6 text-center text-red-500">{error}</div>
         ) : (
           <div className="space-y-4">
-            {students.map((s) => (
-              <Card key={s._id} className="p-4">
-                <CardContent className="flex items-center justify-between gap-4">
-                  <div>
-                    <div className="font-medium">{s.fullName || s.username}</div>
-                    <div className="text-sm text-muted-foreground">{s.university || s.email}</div>
-                  </div>
-                  <div className="w-56">
-                    <Progress value={s.progress} className="h-2" />
-                    <div className="text-sm mt-2">{s.progress}%</div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+           {students.map((s) => (
+  <Card
+    key={s._id}
+    className="p-4 cursor-pointer hover:shadow-md transition"
+    onClick={() => navigate(`/students/${s._id}`)}
+  >
+    <CardContent className="flex items-center justify-between gap-4">
+      <div>
+        <div className="font-medium">{s.fullName || s.username}</div>
+        <div className="text-sm text-muted-foreground">
+          {s.university || s.email}
+        </div>
+      </div>
+
+      <div className="w-56">
+        <Progress value={s.progress} className="h-2" />
+        <div className="text-sm mt-2">{s.progress}%</div>
+      </div>
+    </CardContent>
+  </Card>
+))}
+
           </div>
         )}
       </main>

@@ -95,4 +95,19 @@ router.post('/logout', (req, res) => {
   }
 });
 
+router.get('/student/:id', async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    // console.log('Fetching student with ID:', studentId);
+    const Student = require('../models/user');
+    const student = await Student.findById(studentId).select('-password');
+    // console.log('Fetched student:', student);
+    if (!student) return res.status(404).json({ message: 'Student not found' });
+    res.json(student);
+  } catch (err) {
+    console.error('Get student error', err);
+    res.status(500).json({ message: 'Failed to fetch student', error: err.message });
+  }
+});
+
 module.exports = router;

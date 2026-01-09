@@ -25,6 +25,7 @@ import LandingBooking from "./pages/LandingBooking";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 
+
 // Counsellor pages
 import CounsellorDashboard from "./pages/CounsellorDashboard";
 import StudentProgress from "./pages/StudentProgress";
@@ -33,12 +34,14 @@ import CounsellorResources from "./pages/CounsellorResources";
 import CounsellorSignup from "./pages/CounsellorSignup";
 import CounsellorLogin from "./pages/CounsellorLogin";
 import CounsellorAppointments from "./pages/CounsellorAppointments";
+import StudentDetails from "./pages/StudentDetails";
 
 // Admin pages
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRegisterCounsellor from "./pages/AdminRegisterCounsellor";
 import AdminResources from "./pages/AdminResources";
 import AdminEmergency from "./pages/AdminEmergency";
+
 
 const queryClient = new QueryClient();
 
@@ -87,6 +90,7 @@ const App = () => (
             <Route path="/counsellor/resources" element={<Layout><CounsellorResources /></Layout>} />
             <Route path="/counsellor/volunteer" element={<Layout><Volunteer /></Layout>} />
             <Route path="/counsellor/appointments" element={<Layout><CounsellorAppointments /></Layout>} />
+            <Route path="/students/:id" element={<StudentDetails />} />
 
             {/* Admin routes (no auth required initially) */}
             <Route path="/admin" element={<Layout><AdminDashboard /></Layout>} />

@@ -80,6 +80,9 @@ app.use('/api/sleep', sleepRoutes);
 const quizRoutes = require('./routes/quizRoutes');
 app.use('/api/quiz', quizRoutes);
 
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/api/admin', adminRoutes);
+
 app.use('/videos', videoRoutes);
 app.use('/hub', videoRoutes);
 // Expose user list for counsellor dashboard (public for dev)
