@@ -90,8 +90,10 @@ app.use('/users', userRoutes);
 
 // Counsellor auth routes
 const volunteerRoute = require("./routes/volunteer");
+const communityRoute = require("./routes/community.routes");
 app.use('/api/counsellor', counsellorAuth);
 app.use('/api/volunteer', volunteerRoute);
+app.use('/api/community', communityRoute);
 
 
 

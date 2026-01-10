@@ -10,6 +10,7 @@ import Chat from "./pages/Chat";
 import Appointments from "./pages/Appointments";
 import Resources from "./pages/Resources";
 import Community from "./pages/Community";
+import CommunityDetail from "./pages/CommunityDetails"
 import Quizzes from "./pages/Quizzes";
 import Mood from "./pages/Mood";
 import Sleep from "./pages/Sleep";
@@ -79,6 +80,7 @@ const App = () => (
             <Route path="/appointments" element={<Layout><Appointments /></Layout>} />
             <Route path="/resources" element={<Layout><Resources /></Layout>} />
             <Route path="/community" element={<Layout><Community /></Layout>} />
+             <Route path="/community/:id" element={<Layout><CommunityDetail /></Layout>} />
             <Route path="/quizzes" element={<Layout><Quizzes /></Layout>} />
             <Route path="/mood" element={<Layout><Mood /></Layout>} />
             <Route path="/sleep" element={<Layout><Sleep /></Layout>} />
