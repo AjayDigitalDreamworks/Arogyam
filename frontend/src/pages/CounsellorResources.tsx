@@ -79,7 +79,7 @@ export default function CounsellorResources() {
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       // Only accept messages from the backend origin for security
-      if (e.origin !== 'http://localhost:3000') return;
+      if (e.origin !== 'https://arogyam-9rll.onrender.com') return;
       const data = e.data || {};
       if (data.type === 'upload-success') {
         toast({ title: 'Upload successful', description: data.message || 'Resource uploaded' });
@@ -128,7 +128,7 @@ export default function CounsellorResources() {
 
   const handleUploadClick = () => {
     // Open the backend upload form in the same tab
-    window.location.href = 'http://localhost:3000/videos/upload';
+    window.location.href = 'https://arogyam-9rll.onrender.com/videos/upload';
   };
 
   // NOTE: file input upload flow removed. Backend upload form will be used instead.

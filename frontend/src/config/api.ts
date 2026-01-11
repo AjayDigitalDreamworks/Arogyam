@@ -4,7 +4,7 @@ import axios from "axios";
 // Use localhost in development when the frontend is served from localhost
 const defaultBase = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
   ? 'http://localhost:3000'
-  : 'https://sih-2025-arogyam-0cf2.onrender.com';
+  : 'https://arogyam-9rll.onrender.com';
 
 const api = axios.create({
   baseURL: defaultBase

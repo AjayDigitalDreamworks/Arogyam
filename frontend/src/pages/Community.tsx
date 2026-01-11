@@ -26,7 +26,7 @@ export default function Community() {
 
     const fetchUser = async () => {
       const res = await axios.get(
-        "http://localhost:3000/current_user",
+        "https://arogyam-9rll.onrender.com/current_user",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -49,7 +49,7 @@ export default function Community() {
 
   /* ================= COMMUNITIES ================= */
   const fetchCommunities = async () => {
-    const res = await axios.get("http://localhost:3000/api/community");
+    const res = await axios.get("https://arogyam-9rll.onrender.com/api/community");
     setCommunities(res.data);
   };
 
@@ -60,7 +60,7 @@ export default function Community() {
   /* ================= ACTIONS ================= */
   const joinCommunity = async (id: string) => {
     await axios.post(
-      `http://localhost:3000/api/community/${id}/join`,
+      `https://arogyam-9rll.onrender.com/api/community/${id}/join`,
       {},
       {
         headers: {
@@ -75,7 +75,7 @@ export default function Community() {
   if (!user) return;
 
   await axios.post(
-    "http://localhost:3000/api/community/create",
+    "https://arogyam-9rll.onrender.com/api/community/create",
     {
       ...form,
       role: user.user.role, // <-- send role from frontend

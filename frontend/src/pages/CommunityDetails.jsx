@@ -27,7 +27,7 @@ export default function CommunityDetail() {
   const fetchPosts = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/community/${id}/posts`,
+        `https://arogyam-9rll.onrender.com/api/community/${id}/posts`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setPosts(res.data);
@@ -52,7 +52,7 @@ export default function CommunityDetail() {
     }
 
     await axios.post(
-      `http://localhost:3000/api/community/${id}/posts`,
+      `https://arogyam-9rll.onrender.com/api/community/${id}/posts`,
       { title, content },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -66,7 +66,7 @@ export default function CommunityDetail() {
   /* ================= LIKE ================= */
   const likePost = async (postId) => {
     await axios.post(
-      `http://localhost:3000/api/community/${postId}/like`,
+      `https://arogyam-9rll.onrender.com/api/community/${postId}/like`,
       {},
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -78,7 +78,7 @@ export default function CommunityDetail() {
     if (!replyText.trim()) return;
 
     await axios.post(
-      `http://localhost:3000/api/community/${postId}/reply`,
+      `https://arogyam-9rll.onrender.com/api/community/${postId}/reply`,
       { content: replyText },
       { headers: { Authorization: `Bearer ${token}` } }
     );

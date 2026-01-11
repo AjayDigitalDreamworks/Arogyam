@@ -28,10 +28,10 @@ export default function Volunteer() {
 
   // FETCH DATA
   const fetchAll = async () => {
-    const v = await axios.get("http://localhost:3000/api/volunteer");
+    const v = await axios.get("https://arogyam-9rll.onrender.com/api/volunteer");
  
     const s = await axios.get(
-      "http://localhost:3000/api/volunteer/students"
+      "https://arogyam-9rll.onrender.com/api/volunteer/students"
     );
 
     
@@ -54,7 +54,7 @@ export default function Volunteer() {
   // CREATE VOLUNTEER
   const createVolunteer = async () => {
     await axios.post(
-      "http://localhost:3000/api/volunteer/create",
+      "https://arogyam-9rll.onrender.com/api/volunteer/create",
       formData
     );
     setOpen(false);
@@ -64,7 +64,7 @@ export default function Volunteer() {
   // MAKE VOLUNTEER
   const makeVolunteer = async (id) => {
     await axios.patch(
-      `http://localhost:3000/api/volunteer/${id}/set-volunteer`
+      `https://arogyam-9rll.onrender.com/api/volunteer/${id}/set-volunteer`
     );
     fetchAll();
   };
@@ -72,7 +72,7 @@ export default function Volunteer() {
   // REMOVE VOLUNTEER
   const removeVolunteer = async (id) => {
     await axios.patch(
-      `http://localhost:3000/api/volunteer/${id}/remove-volunteer`
+      `https://arogyam-9rll.onrender.com/api/volunteer/${id}/remove-volunteer`
     );
     fetchAll();
   };

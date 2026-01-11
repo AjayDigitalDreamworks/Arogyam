@@ -22,7 +22,7 @@ import axios from "axios";
 // Function to send quiz score to backend
 const sendQuizScore = async (userId: string, score: number, quiz_type: string, date: Date = new Date()) => {
   try {
-    await axios.post("http://localhost:3000/api/quiz", {
+    await axios.post("https://arogyam-9rll.onrender.com/api/quiz", {
       userId,
       score,
       quiz_type,
@@ -151,7 +151,7 @@ export default function Quizzes() {
     const [user, setUser] = useState(null);
  useEffect(() => {
     axios
-      .get("http://localhost:3000/current_user", { withCredentials: true })
+      .get("https://arogyam-9rll.onrender.com/current_user", { withCredentials: true })
       .then((response) => {
         console.log("Fetched user:", response.data.user);
         setUser(response.data.user);
@@ -180,7 +180,7 @@ export default function Quizzes() {
       const quizType = activeQuiz.id === "phq9" ? "depression" : "anxiety";
       const sendQuizScore = async (userId: string, score: number, quiz_type: string, date: Date = new Date()) => {
   try {
-    await axios.post("http://localhost:3000/api/quiz", {
+    await axios.post("https://arogyam-9rll.onrender.com/api/quiz", {
       userId,
       score,
       quiz_type,
