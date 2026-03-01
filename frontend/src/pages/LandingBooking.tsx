@@ -272,7 +272,7 @@ const LandingBooking = () => {
                     disabled={!selectedCounselor || !selectedDate || !selectedTime}
                     asChild
                   >
-                    <Link to="/dashboard">
+                    <Link to="/login">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Confirm Booking
                     </Link>

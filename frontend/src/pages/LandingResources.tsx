@@ -240,7 +240,7 @@ const LandingResources = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-              <Link to="/dashboard">Chat with AI Assistant</Link>
+              <Link to="/login">Chat with AI Assistant</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <Link to="/landing-booking">Book a Session</Link>

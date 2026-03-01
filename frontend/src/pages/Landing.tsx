@@ -395,7 +395,7 @@ const Landing = () => {
               
               <div className="mt-6 text-center">
                 <Button className="bg-primary hover:bg-primary/90" asChild>
-                  <Link to="/community">Join Our Community</Link>
+                  <Link to="/login">Join Our Community</Link>
                 </Button>
               </div>
             </CardContent>

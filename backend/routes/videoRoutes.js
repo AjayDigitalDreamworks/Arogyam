@@ -40,7 +40,9 @@ router.get('/upload', (req, res) => {
 });
 
 // Upload route
-router.post('/upload', uploadFiles, async (req, res) => {
+const { verifyToken } = require('../middleware/authMiddleware');
+
+router.post('/upload', verifyToken, uploadFiles, async (req, res) => {
   try {
     const { title, category, duration, rating, description, tags } = req.body;
 
@@ -109,7 +111,7 @@ router.get('/watch/:id', async (req, res) => {
 // Note: This endpoint now deletes ONLY the database record and does NOT
 // attempt to remove files from Cloudinary. This avoids accidental removal
 // of media assets that may be in use elsewhere.
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
     const id = req.params.id;
     console.log(`DELETE /videos/${id} requested from ${req.ip} - authorization: ${req.headers.authorization || 'none'}`);

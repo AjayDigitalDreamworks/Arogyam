@@ -5,6 +5,7 @@ const CommunityPost = require("../models/comments");
 const { verifyToken } = require("../middleware/authMiddleware");
 
 // GET ALL COMMUNITIES
+// Public: List communities
 router.get("/", async (req, res) => {
   const communities = await Community.find().populate("members", "_id");
   res.json(communities);
@@ -39,7 +40,7 @@ router.post("/create", verifyToken, async (req, res) => {
 
 
 
-// JOIN COMMUNITY
+// Protected: Join community
 router.post("/:id/join", verifyToken, async (req, res) => {
     // console.log(req.user);
   await Community.findByIdAndUpdate(req.params.id, {

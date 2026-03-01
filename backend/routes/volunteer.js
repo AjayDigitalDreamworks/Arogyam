@@ -7,7 +7,8 @@
 // const Volunteer = require("../models/volunteer");
 // const generateUserIdentity = require("../utils/identity"); 
 
-// router.post("/", async (req, res, next) => {
+// const { verifyToken } = require("../middleware/authMiddleware");
+// router.post("/", verifyToken, async (req, res, next) => {
 //   const { email, password } = req.body;
 
 //   const volunteer = await Volunteer.findOne({ email });

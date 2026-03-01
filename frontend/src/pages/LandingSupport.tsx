@@ -111,7 +111,7 @@ const LandingSupport = () => {
                   </div>
                 </div>
                 <Button className="w-full" asChild>
-                  <Link to="/dashboard">Start Chat Now</Link>
+                  <Link to="/login">Start Chat Now</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -137,7 +137,7 @@ const LandingSupport = () => {
                   </div>
                 </div>
                 <Button variant="outline" className="w-full" asChild>
-                  <Link to="/landing-booking">Book Session</Link>
+                  <Link to="/login">Book Session</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -163,7 +163,7 @@ const LandingSupport = () => {
                   </div>
                 </div>
                 <Button variant="outline" className="w-full" asChild>
-                  <Link to="/dashboard">Join Community</Link>
+                  <Link to="/login">Join Community</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -229,7 +229,7 @@ const LandingSupport = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="bg-primary hover:bg-primary/90" asChild>
-              <Link to="/dashboard">Chat with AI Assistant</Link>
+              <Link to="/login">Chat with AI Assistant</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <a href="mailto:support@mindwell.app">Email Support Team</a>

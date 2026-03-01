@@ -40,6 +40,7 @@ import StudentDetails from "./pages/StudentDetails";
 
 // Admin pages
 import AdminDashboard from "./pages/AdminDashboard";
+import { AdminProtectedRoute } from "@/components/AdminProtectedRoute";
 import AdminRegisterCounsellor from "./pages/AdminRegisterCounsellor";
 import AdminResources from "./pages/AdminResources";
 import AdminEmergency from "./pages/AdminEmergency";
@@ -98,8 +99,8 @@ const App = () => (
             <Route path="/counsellor/appointments" element={<Layout><CounsellorAppointments /></Layout>} />
             <Route path="/students/:id" element={<StudentDetails />} />
 
-            {/* Admin routes (no auth required initially) */}
-            <Route path="/admin" element={<Layout><AdminDashboard /></Layout>} />
+            {/* Admin routes (now protected) */}
+            <Route path="/admin" element={<AdminProtectedRoute><Layout><AdminDashboard /></Layout></AdminProtectedRoute>} />
             <Route path="/admin/register-counsellor" element={<Layout><AdminRegisterCounsellor /></Layout>} />
             <Route path="/admin/resources" element={<Layout><AdminResources /></Layout>} />
             <Route path="/admin/emergency" element={<Layout><AdminEmergency /></Layout>} />
