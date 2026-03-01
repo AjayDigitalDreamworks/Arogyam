@@ -49,6 +49,10 @@ mongoose
 // Authentication Routes (login/signup)
 app.use("/api/auth", authRoutes);
 
+// chatbot senti
+
+app.use("/api/chat", require("./routes/chat"));
+
 // Protected Route Example (requires JWT verification)
 app.get("/protected", verifyToken, (req, res) => {
   res.json({ message: "You have access to this protected route", user: req.user });

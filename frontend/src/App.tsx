@@ -7,6 +7,7 @@ import { Layout } from "@/components/Layout"; // Make sure Layout conditionally 
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Dashboard from "./pages/Dashboard";
 import Chat from "./pages/Chat";
+import MentalHealthChatbotUI from "./chatboat/chatSent";
 import Appointments from "./pages/Appointments";
 import Resources from "./pages/Resources";
 import Community from "./pages/Community";
@@ -64,6 +65,7 @@ const App = () => (
             <Route path="/landing-resources" element={<LandingResources />} />
             <Route path="/landing-support" element={<LandingSupport />} />
             <Route path="/landing-booking" element={<LandingBooking />} />
+            <Route path="/chatbot" element={<MentalHealthChatbotUI />} />
             
             {/* Routes without Sidebar/Header (Login & Signup) */}
             <Route path="/login" element={<Login />} />
