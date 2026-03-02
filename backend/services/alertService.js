@@ -13,7 +13,7 @@ const sendAlert = async (userId, message, score) => {
   await transporter.sendMail({
     from: process.env.ADMIN_EMAIL,
     to: process.env.ADMIN_EMAIL,
-    subject: "🚨 High Risk Student Alert",
+    subject: " High Risk Student Alert",
     text: `
 User ID: ${userId}
 Message: ${message}
