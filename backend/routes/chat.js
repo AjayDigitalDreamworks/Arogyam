@@ -6,7 +6,7 @@ const generateReply = require("../services/chatService");
 const sendAlert = require("../services/alertService");
 
 const sessions = {}; 
-
+// In-memory session
 router.post("/", async (req, res) => {
   try {
     const { message, sessionId } = req.body;

@@ -5,7 +5,7 @@ import { Mic, MicOff } from "lucide-react";
 export default function CalmMindFullPage() {
 
     /* =========================
-       CHAT MEMORY (localStorage)
+       CHAT MEMORY (store in localhostorage)
     ========================== */
 
     const [messages, setMessages] = useState(() => {
