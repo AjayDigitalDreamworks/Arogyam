@@ -4,6 +4,12 @@ import { Mic, MicOff } from "lucide-react";
 
 export default function CalmMindFullPage() {
 
+
+    // On refresh: clear session and start new, delete old chat (for privacy)
+
+
+
+
     /* =========================
        CHAT MEMORY (store in localhostorage)
     ========================== */
@@ -21,6 +27,27 @@ export default function CalmMindFullPage() {
             ];
     });
 
+
+    useEffect(() => {
+        localStorage.removeItem("sessionId");
+        localStorage.removeItem("calmMindChat");
+
+        const newSessionId = crypto.randomUUID();
+        localStorage.setItem("sessionId", newSessionId);
+
+        const initialMessage = [
+            {
+                sender: "bot",
+                text: "Hi 👋 I'm CalmMind AI. I'm here to listen. How are you feeling today?",
+                time: new Date().toLocaleTimeString(),
+            },
+        ];
+
+        localStorage.setItem("calmMindChat", JSON.stringify(initialMessage));
+        setMessages(initialMessage);
+
+    }, []);
+
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
     const [isListening, setIsListening] = useState(false);
@@ -29,18 +56,7 @@ export default function CalmMindFullPage() {
     const recognitionRef = useRef(null);
 
 
-    // on refresh, clear session and start new and delete old chat (for privacy)
 
-    useEffect(() => {
-        const sessionId = localStorage.getItem("sessionId");
-        if (sessionId) {
-            localStorage.removeItem("sessionId");
-            localStorage.removeItem("calmMindChat");
-        } else {
-            const newSessionId = crypto.randomUUID();
-            localStorage.setItem("sessionId", newSessionId);
-        } 
-    }, []);
 
 
 
@@ -200,8 +216,8 @@ export default function CalmMindFullPage() {
                     >
                         <div
                             className={`max-w-2xl px-6 py-4 rounded-2xl text-sm md:text-base shadow-sm ${msg.sender === "user"
-                                    ? "bg-indigo-500 text-white rounded-br-none"
-                                    : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
+                                ? "bg-indigo-500 text-white rounded-br-none"
+                                : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
                                 }`}
                         >
                             <p>{msg.text}</p>
