@@ -10,7 +10,7 @@ const generateReply = async (
 ) => {
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-3-flash-preview",
     //   generationConfig: {
     //     maxOutputTokens: 150, 
     //     temperature: 0.7,
