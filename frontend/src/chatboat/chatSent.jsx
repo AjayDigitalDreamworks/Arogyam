@@ -28,6 +28,22 @@ export default function CalmMindFullPage() {
     const chatEndRef = useRef(null);
     const recognitionRef = useRef(null);
 
+
+    // on refresh, clear session and start new and delete old chat (for privacy)
+
+    useEffect(() => {
+        const sessionId = localStorage.getItem("sessionId");
+        if (sessionId) {
+            localStorage.removeItem("sessionId");
+            localStorage.removeItem("calmMindChat");
+        } else {
+            const newSessionId = crypto.randomUUID();
+            localStorage.setItem("sessionId", newSessionId);
+        } 
+    }, []);
+
+
+
     /* =========================
        AUTO SCROLL
     ========================== */
@@ -114,7 +130,7 @@ export default function CalmMindFullPage() {
             const sessionId = localStorage.getItem("sessionId") || crypto.randomUUID();
             localStorage.setItem("sessionId", sessionId);
 
-            const response = await fetch("http://localhost:5000/api/chat", {
+            const response = await fetch("http://localhost:3000/api/chat", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
