@@ -4,12 +4,6 @@ import { Mic, MicOff } from "lucide-react";
 
 export default function CalmMindFullPage() {
 
-
-    // On refresh: clear session and start new, delete old chat (for privacy)
-
-
-
-
     /* =========================
        CHAT MEMORY (store in localhostorage)
     ========================== */
