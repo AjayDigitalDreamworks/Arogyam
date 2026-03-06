@@ -15,6 +15,7 @@ const userRoutes = require('./routes/userRoutes');
 const counsellorAuth = require('./routes/counsellorAuth');
 const cron = require('node-cron');
 const nodemailer = require('nodemailer'); 
+const transporter = require("./utils/mailer");
 const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -86,19 +87,86 @@ app.get('/current_user', verifyToken, async (req, res) => {
 
 //notification routes
 // Run every 5 minutes to check for upcoming appointments within the next 2 hours
-cron.schedule('*/5 * * * *', async () => {
+// cron.schedule('*/5 * * * *', async () => {
+//   try {
+//     const now = new Date();
+//     const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+//      console.log("hello from cron job", now.toISOString(), twoHoursLater.toISOString());
+//     const appointments = await Appointment.find({
+//       date: { 
+//         $gte: now.toISOString().split('T')[0], 
+//         $lte: twoHoursLater.toISOString().split('T')[0] 
+//       },
+//       status: { $in: ['pending', 'accepted', 'modified'] },
+//       reminderSent: { $ne: true }
+//     }).populate('userId').populate('counselorId');
+
+//     for (const appt of appointments) {
+
+//       let apptDateTime;
+
+//       if (appt.time && appt.time.length <= 5) {
+//         apptDateTime = new Date(`${appt.date}T${appt.time}:00`);
+//       } else {
+//         apptDateTime = new Date(`${appt.date}T${appt.time}`);
+//       }
+
+//       const diff = apptDateTime - now;
+
+//       // Send reminder if appointment is within the next 2 hours
+//       if (diff > 0 && diff <= 2 * 60 * 60 * 1000) {
+
+//         const userEmail = appt.userId?.email;
+
+//         if (!userEmail || !userEmail.includes('@')) {
+//           console.error(`No valid email found for userId: ${appt.userId?._id}`);
+//           continue;
+//         }
+
+//         const message = `Reminder: You have an appointment with ${appt.counselorId?.name || 'your counselor'} at ${appt.time} on ${appt.date}.`;
+
+//         try {
+//           await transporter.sendMail({
+//             from: "arogyam.help01@gmail.com",
+//             to: userEmail,
+//             subject: "Appointment Reminder",
+//             text: message
+//           });
+
+//           appt.reminderSent = true;
+//           await appt.save();
+
+//           console.log(`Reminder sent to ${userEmail}`);
+//         } catch (emailErr) {
+//           console.error(`Failed to send reminder to ${userEmail}:`, emailErr);
+//         }
+//       }
+//     }
+
+//   } catch (err) {
+//     console.error('Error sending reminders:', err);
+//   }
+// });
+
+
+
+
+// Run every 5 minutes
+cron.schedule("*/5 * * * *", async () => {
+
   try {
+
     const now = new Date();
     const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-     console.log("hello from cron job", now.toISOString(), twoHoursLater.toISOString());
+
+    console.log("Cron Running:", now);
+
     const appointments = await Appointment.find({
-      date: { 
-        $gte: now.toISOString().split('T')[0], 
-        $lte: twoHoursLater.toISOString().split('T')[0] 
-      },
-      status: { $in: ['pending', 'accepted', 'modified'] },
+      status: { $in: ["pending", "accepted", "modified"] },
       reminderSent: { $ne: true }
-    }).populate('userId').populate('counselorId');
+    })
+    .populate("userId")
+    .populate("counselorId");
 
     for (const appt of appointments) {
 
@@ -112,39 +180,58 @@ cron.schedule('*/5 * * * *', async () => {
 
       const diff = apptDateTime - now;
 
-      // Send reminder if appointment is within the next 2 hours
+      // Check if appointment is within next 2 hours
       if (diff > 0 && diff <= 2 * 60 * 60 * 1000) {
 
         const userEmail = appt.userId?.email;
 
-        if (!userEmail || !userEmail.includes('@')) {
-          console.error(`No valid email found for userId: ${appt.userId?._id}`);
+        if (!userEmail || !userEmail.includes("@")) {
+          console.log("Invalid Email for user:", appt.userId?._id);
           continue;
         }
 
-        const message = `Reminder: You have an appointment with ${appt.counselorId?.name || 'your counselor'} at ${appt.time} on ${appt.date}.`;
+        const message = `
+Hello,
+
+Reminder: You have an appointment.
+
+Counselor: ${appt.counselorId?.name || "Counselor"}
+Date: ${appt.date}
+Time: ${appt.time}
+
+Please be available on time.
+
+Team Arogyam
+`;
 
         try {
+
           await transporter.sendMail({
-            from: "arogyam.help01@gmail.com",
+            from: `"Arogyam Support" <${process.env.EMAIL}>`,
             to: userEmail,
             subject: "Appointment Reminder",
             text: message
           });
 
+          console.log("Reminder sent to:", userEmail);
+
           appt.reminderSent = true;
           await appt.save();
 
-          console.log(`Reminder sent to ${userEmail}`);
         } catch (emailErr) {
-          console.error(`Failed to send reminder to ${userEmail}:`, emailErr);
+
+          console.error("Email send failed:", emailErr);
+
         }
       }
     }
 
   } catch (err) {
-    console.error('Error sending reminders:', err);
+
+    console.error("Cron Error:", err);
+
   }
+
 });
 
 
