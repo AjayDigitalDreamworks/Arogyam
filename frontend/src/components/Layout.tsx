@@ -54,9 +54,21 @@ React.useEffect(() => {
 }, []);
 
   // Dismiss individual notification
-  const handleDismissNotification = (id: number) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-  };
+  const handleDismissNotification = async (id) => {
+
+  try {
+
+    await api.delete(`/api/notifications/${id}`);
+
+    setNotifications((prev) =>
+      prev.filter((notif) => notif._id !== id)
+    );
+
+  } catch (err) {
+    console.error("Error deleting notification", err);
+  }
+
+};
 
   const handleBellClick = () => setShowNotifications(true);
   const handleDismiss = () => setShowNotifications(false);
