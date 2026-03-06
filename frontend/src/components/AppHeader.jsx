@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Bell, MessageCircle, ChevronDown, Search, Heart, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -22,6 +22,19 @@ export default function AppHeader() {
       navigate('/login');
     }
   }
+
+  // Notification popup state
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  // Static notifications
+  const notifications = [
+    { id: 1, message: "Your appointment is confirmed for tomorrow." },
+    { id: 2, message: "New wellness guide available!" },
+    { id: 3, message: "Community event this Friday." },
+  ];
+
+  const handleBellClick = () => setShowNotifications(true);
+  const handleDismiss = () => setShowNotifications(false);
 
   return (
     <header className="bg-white w-full flex items-center justify-between border-b border-gray-200 shadow-sm">
@@ -88,8 +101,42 @@ export default function AppHeader() {
       {/* Right: Notifications, Profile */}
       <div className="flex items-center gap-5">
         <div className="relative">
-          <Bell className="w-5 h-5 text-gray-500" />
-          <span className="absolute -top-1 -right-2 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+          <button
+            className="focus:outline-none"
+            onClick={handleBellClick}
+            aria-label="Show notifications"
+          >
+            <Bell className="w-5 h-5 text-gray-500" />
+            <span className="absolute -top-1 -right-2 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
+          </button>
+          {showNotifications && (
+            <div
+              className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg"
+              style={{ zIndex: 9999, overflow: 'visible' }}
+            >
+              <div className="flex items-center justify-between px-4 py-2 border-b">
+                <span className="font-semibold text-lg">Notifications</span>
+                <button
+                  className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+                  onClick={handleDismiss}
+                  aria-label="Dismiss notifications"
+                >
+                  ×
+                </button>
+              </div>
+              <ul className="max-h-60 overflow-y-auto" style={{ overflowY: 'auto' }}>
+                {notifications.length === 0 ? (
+                  <li className="px-4 py-3 text-gray-500">No notifications</li>
+                ) : (
+                  notifications.map((notif) => (
+                    <li key={notif.id} className="px-4 py-3 border-b last:border-b-0 text-gray-700">
+                      {notif.message}
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="relative">
           <MessageCircle className="w-5 h-5 text-gray-500 ml-1" />

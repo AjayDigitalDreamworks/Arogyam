@@ -153,7 +153,7 @@ async function sendAppointmentReminders() {
 
       const mailOptions = {
         from: "arogyam.help01@gmail.com",
-        to: userEmail,
+        to: "autenic123@getMaxListeners.com",
         subject: "Upcoming Appointment Reminder",
         text: `This is a reminder for your upcoming appointment with ${counselorName} scheduled on ${apptTime}. Please be prepared and join on time.`
       };

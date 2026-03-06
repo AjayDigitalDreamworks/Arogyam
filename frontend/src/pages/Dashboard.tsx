@@ -39,11 +39,6 @@ export default function Dashboard() {
         // Dashboard data
         const res = await api.get("/users/dashboard");
         const { user, latestMood, latestSleep, upcomingAppointments, quizScores } = res.data;
-
-        // console.log("Fetched dashboard data:", res.data);
-
-        localStorage.setItem('userName', user.fullName);
-        localStorage.setItem('userEmail', user.email);
         setUser(user);
         setAppointmentsData(upcomingAppointments || []);
 
