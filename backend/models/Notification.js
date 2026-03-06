@@ -9,7 +9,11 @@ const notificationSchema = new mongoose.Schema({
   message: String,
   type: {
     type: String,
-    enum: ["streak", "followup", "personal"]
+    enum: ["streak",
+      "followup",
+      "personal",
+      "sleep",
+      "quiz"]
   },
   isRead: {
     type: Boolean,
