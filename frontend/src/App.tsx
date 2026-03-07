@@ -30,6 +30,7 @@ import LandingSupport from "./pages/LandingSupport";
 import LandingBooking from "./pages/LandingBooking";
 import SignUpForm from "./pages/Signup";
 import Login from "./pages/Login";
+import LoginForm from "./pages/LoginPage";
 
 
 
@@ -73,6 +74,7 @@ const App = () => (
             {/* games */}
             <Route path="/puzzle-game" element={<PuzzleGame />} />
             <Route path="/mood-match" element={<MoodMatch />} />
+            <Route path="/logincheckk" element={<LoginForm/>} />
             {/* Landing pages (pre-login) */}
             <Route path="/" element={<Landing />} />
             <Route path="/landing-resources" element={<LandingResources />} />
