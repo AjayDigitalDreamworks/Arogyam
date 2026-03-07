@@ -74,7 +74,7 @@ const App = () => (
             {/* games */}
             <Route path="/puzzle-game" element={<PuzzleGame />} />
             <Route path="/mood-match" element={<MoodMatch />} />
-            <Route path="/logincheckk" element={<LoginForm/>} />
+            {/* <Route path="/logincheckk" element={<Login/>} /> */}
             {/* Landing pages (pre-login) */}
             <Route path="/" element={<Landing />} />
             <Route path="/landing-resources" element={<LandingResources />} />
@@ -85,7 +85,7 @@ const App = () => (
             <Route path="/hybridchat" element={<HybridChat />} />
             
             {/* Routes without Sidebar/Header (Login & Signup) */}
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignUpForm />} />
             
             {/* Counsellor auth (signup/login) */}
