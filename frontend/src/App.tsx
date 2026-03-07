@@ -21,6 +21,8 @@ import Exercise from "./pages/Exercise";
 import Crisis from "./pages/Crisis";
 import PuzzleGame from "./pages/games/calm_puzzle";
 import MoodMatch from "./pages/games/MoodMatch";
+import MindGarden from "./pages/games/MindGarden";
+import BreathingGame from "./pages/games/arogyam_breathing_game";
 
 // import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
@@ -29,6 +31,7 @@ import LandingResources from "./pages/LandingResources";
 import LandingSupport from "./pages/LandingSupport";
 import LandingBooking from "./pages/LandingBooking";
 import SignUpForm from "./pages/Signup";
+import SignupDB from "./pages/SignUpPage"; 
 import Login from "./pages/Login";
 import LoginForm from "./pages/LoginPage";
 
@@ -74,6 +77,8 @@ const App = () => (
             {/* games */}
             <Route path="/puzzle-game" element={<PuzzleGame />} />
             <Route path="/mood-match" element={<MoodMatch />} />
+            <Route path="/mindgarden" element={<MindGarden /> } />
+            <Route path="/breathing" element={<BreathingGame />} />
             {/* <Route path="/logincheckk" element={<Login/>} /> */}
             {/* Landing pages (pre-login) */}
             <Route path="/" element={<Landing />} />
@@ -86,7 +91,8 @@ const App = () => (
             
             {/* Routes without Sidebar/Header (Login & Signup) */}
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignUpForm />} />
+            <Route path="/signup" element={<SignupDB />} />
+            {/* <Route path="/signupdb" element={<SignUpForm />} /> */}
             
             {/* Counsellor auth (signup/login) */}
             <Route path="/counsellor/signup" element={<CounsellorSignup />} />
