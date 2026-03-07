@@ -70,7 +70,7 @@ const App = () => (
             <Route path="/landing-support" element={<LandingSupport />} />
             <Route path="/landing-booking" element={<LandingBooking />} />
             <Route path="/chatbot" element={<MentalHealthChatbotUI />} />
-            <Route path="/chat" element={<ChatInvent/>} />
+            <Route path="/chatInvent" element={<ChatInvent/>} />
             <Route path="/hybridchat" element={<HybridChat />} />
             
             {/* Routes without Sidebar/Header (Login & Signup) */}
