@@ -229,6 +229,45 @@ const LoginForm = () => {
   const [loading,setLoading]=useState(false);
   const [focusedField,setFocusedField]=useState(null);
 
+
+  // login handle 
+  const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // Ensure both fields are filled
+        if (!email || !password) {
+            alert("Please fill in both email and password.");
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.token) {
+                const token = result.token;
+                console.log("Login successful, token:", token);
+                localStorage.setItem('token', token);
+                window.location.href = "/dashboard"; // Redirect to dashboard
+            } else {
+                setErrorMessage(result.message || "Something went wrong.");
+            }
+        } catch (error) {
+            console.error("Error logging in:", error);
+            alert("An error occurred. Please try again later.");
+        }
+    };
+
+    // end login handle
+
+
   const inputStyle = (name) => ({
     width:"100%",padding:"0.72rem 1rem",
     border:`1.5px solid ${focusedField===name?"#8AAFD4":"#DDE8F2"}`,
