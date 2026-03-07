@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CalmPuzzle from "./games/calm_puzzle.jsx";
 import MoodMatch from "./games/MoodMatch.jsx";
+import MindGarden from "./games/MindGarden.jsx";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -158,6 +159,17 @@ const games = [
     iframe: true,
     iframeSrc: "https://www.onlinegames.io/granny/",
   },
+  {
+    id: "mind_garden",
+    title: "Mind Garden",
+    description: "Grow your peaceful digital wellness garden with daily activities.",
+    duration: "5-15 minutes",
+    type: "Wellness Game",
+    icon: "🌿",
+    color: "bg-green-300",
+    highScore: null,
+    component: "MindGarden",
+  },
 ];
 
 const questionOptions = [
@@ -256,6 +268,8 @@ export default function Quizzes() {
       setShowGameModal("calm_puzzle");
     } else if (game.component === "MoodMatch") {
       setShowGameModal("MoodMatch");
+    } else if (game.component === "MindGarden") {
+      setShowGameModal("MindGarden");
     } else {
       toast({
         title: `Starting ${game.title}`,
@@ -352,6 +366,15 @@ export default function Quizzes() {
             <button style={{position: "absolute", top: 8, right: 12, background: "#eee", border: "none", borderRadius: "50%", width: 32, height: 32, fontSize: 20, cursor: "pointer"}} onClick={() => setShowGameModal(null)} aria-label="Close">×</button>
             <h2 style={{marginBottom: "1rem"}}>Mood Match</h2>
             <MoodMatch />
+          </div>
+        </div>
+      )}
+      {showGameModal === "MindGarden" && (
+        <div style={{position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.7)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center"}} onClick={() => setShowGameModal(null)}>
+          <div style={{position: "relative", background: "#fff", borderRadius: "16px", boxShadow: "0 4px 32px rgba(0,0,0,0.2)", padding: "1rem", maxWidth: "900px", width: "90vw", maxHeight: "90vh", overflow: "auto"}} onClick={e => e.stopPropagation()}>
+            <button style={{position: "absolute", top: 8, right: 12, background: "#eee", border: "none", borderRadius: "50%", width: 32, height: 32, fontSize: 20, cursor: "pointer"}} onClick={() => setShowGameModal(null)} aria-label="Close">×</button>
+            <h2 style={{marginBottom: "1rem"}}>Mind Garden</h2>
+            <MindGarden />
           </div>
         </div>
       )}

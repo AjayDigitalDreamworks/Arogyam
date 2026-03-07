@@ -595,7 +595,7 @@ export default function MindGarden() {
               </div>
               <p className="text-xs text-gray-400 mt-2">Activities locked until tomorrow 🌙</p>
               <button onClick={() => setCelebration(false)}
-                className="mt-4 px-7 py-2 rounded-xl text-white text-sm font-bold shadow"
+                className="mt-4 px-7 py-2.5 rounded-xl text-white text-sm font-bold shadow"
                 style={{ background:"linear-gradient(135deg,#10b981,#059669)" }}>
                 View Garden 🌿
               </button>
