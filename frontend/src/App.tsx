@@ -19,6 +19,8 @@ import Mood from "./pages/Mood";
 import Sleep from "./pages/Sleep";
 import Exercise from "./pages/Exercise";
 import Crisis from "./pages/Crisis";
+import PuzzleGame from "./pages/games/calm_puzzle";
+import MoodMatch from "./pages/games/MoodMatch";
 
 // import NotFound from "./pages/NotFound";
 import Landing from "./pages/Landing";
@@ -67,6 +69,10 @@ const App = () => (
         {/* Routing logic */}
         <BrowserRouter>
           <Routes>
+
+            {/* games */}
+            <Route path="/puzzle-game" element={<PuzzleGame />} />
+            <Route path="/mood-match" element={<MoodMatch />} />
             {/* Landing pages (pre-login) */}
             <Route path="/" element={<Landing />} />
             <Route path="/landing-resources" element={<LandingResources />} />
